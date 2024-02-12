@@ -49,8 +49,8 @@ public class PersistenceService {
         });
 
         songList.forEach(song -> {
-            spotifyServer.getSongs().putIfAbsent(song.title(), new ArrayList<>());
-            spotifyServer.getSongs().get(song.title()).add(song);
+            spotifyServer.getSongs().putIfAbsent(song.getTitle(), new ArrayList<>());
+            spotifyServer.getSongs().get(song.getTitle()).add(song);
         });
     }
 
@@ -103,7 +103,8 @@ public class PersistenceService {
         return readClassFromFile(Song.class, SONGS_PATH, SONGS_LOCK);
     }
 
-    private static <T> List<T> readClassFromFile(Class<T> tClass, String path, Object lock) throws PersistenceServiceException {
+    private static <T> List<T> readClassFromFile(Class<T> tClass, String path, Object lock)
+        throws PersistenceServiceException {
         synchronized (lock) {
             try (var reader = new FileReader(path)) {
                 var res = GSON.fromJson(reader, Array.newInstance(tClass, 0).getClass());

@@ -18,10 +18,10 @@ public class AnalyticsServiceTest {
     private static final SpotifyServerInterface serverMock = mock(SpotifyServerInterface.class);
 
     private static final List<Song> songs = List.of(
-        new Song(UUID.randomUUID(), "song1", "album1", "artist1", 1, 1, "src1"),
-        new Song(UUID.randomUUID(), "song2", "album2", "artist2", 1, 5, "src2"),
-        new Song(UUID.randomUUID(), "song3", "album3", "artist3", 1, 8, "src3"),
-        new Song(UUID.randomUUID(), "song4", "album4", "artist4", 1, 4, "src4")
+        new Song(UUID.randomUUID(), "song1", "album1", "artist1", 1, 1, "src1", , , , , , , ),
+        new Song(UUID.randomUUID(), "song2", "album2", "artist2", 1, 5, "src2", , , , , , , ),
+        new Song(UUID.randomUUID(), "song3", "album3", "artist3", 1, 8, "src3", , , , , , , ),
+        new Song(UUID.randomUUID(), "song4", "album4", "artist4", 1, 4, "src4", , , , , , , )
     );
 
     @Test

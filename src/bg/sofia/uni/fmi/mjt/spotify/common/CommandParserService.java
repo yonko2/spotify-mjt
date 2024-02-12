@@ -1,6 +1,6 @@
 package bg.sofia.uni.fmi.mjt.spotify.common;
 
-import bg.sofia.uni.fmi.mjt.spotify.client.commands.DisconnectCommand;
+import bg.sofia.uni.fmi.mjt.spotify.server.commands.DisconnectCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.SpotifyServerInterface;
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.AddSongToPlaylistCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.CreatePlaylistCommand;

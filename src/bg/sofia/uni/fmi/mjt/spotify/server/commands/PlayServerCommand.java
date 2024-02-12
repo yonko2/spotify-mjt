@@ -28,7 +28,7 @@ public class PlayServerCommand implements SpotifyCommand {
     public CommandResponse execute() {
         // for now get the first result
         Song song = server.getSongs().get(name).getFirst();
-        Path path = Paths.get(PersistenceService.DATA_DIRECTORY + "/songs/" + song.sourceFilepath());
+        Path path = Paths.get(PersistenceService.DATA_DIRECTORY + "/songs/" + song.getSourceFilepath());
 
         ServerStreamPlayback serverStreamPlayback = new ServerStreamPlayback(path);
         server.setCurrentPlaybackThread(serverStreamPlayback);

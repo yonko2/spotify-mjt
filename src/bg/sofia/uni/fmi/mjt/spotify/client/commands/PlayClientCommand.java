@@ -1,12 +1,10 @@
 package bg.sofia.uni.fmi.mjt.spotify.client.commands;
 
-import bg.sofia.uni.fmi.mjt.spotify.client.SpotifyClient;
 import bg.sofia.uni.fmi.mjt.spotify.client.SpotifyClientInterface;
 import bg.sofia.uni.fmi.mjt.spotify.client.threads.ClientStreamPlayback;
 import bg.sofia.uni.fmi.mjt.spotify.common.models.CommandResponse;
 import bg.sofia.uni.fmi.mjt.spotify.common.SpotifyCommand;
 import bg.sofia.uni.fmi.mjt.spotify.common.models.io.AudioFormatSerializable;
-import bg.sofia.uni.fmi.mjt.spotify.server.SpotifyServerInterface;
 import com.google.gson.Gson;
 
 import javax.sound.sampled.AudioFormat;
@@ -15,7 +13,7 @@ public class PlayClientCommand implements SpotifyCommand {
     public static final String COMMAND_STRING = "play";
     private static final Gson GSON = new Gson();
     private final String audioFormatJson;
-    private SpotifyClientInterface spotifyClient;
+    private final SpotifyClientInterface spotifyClient;
 
     public PlayClientCommand(String audioFormatJson, SpotifyClientInterface spotifyClient) {
         this.audioFormatJson = audioFormatJson;
@@ -27,11 +25,9 @@ public class PlayClientCommand implements SpotifyCommand {
         AudioFormatSerializable audioFormatSerializable = GSON.fromJson(audioFormatJson, AudioFormatSerializable.class);
         AudioFormat audioFormat = AudioFormatSerializable.toAudioFormat(audioFormatSerializable);
 
-        ClientStreamPlayback clientStreamPlayback = new ClientStreamPlayback(audioFormat);
-        spotifyClient.setCurrentPlaybackThread(clientStreamPlayback);
+        ClientStreamPlayback clientStreamPlayback = new ClientStreamPlayback(audioFormat, spotifyClient);
         clientStreamPlayback.start();
-        // receive song info from server
-        // connect to socket in new thread to play the song
-        return null;
+
+        return new CommandResponse("Playback started on client", true);
     }
 }

@@ -7,6 +7,6 @@ import java.util.UUID;
 
 public record PlaylistSongSerializable(UUID songID, String timeAddedISOString) implements Serializable {
     public static PlaylistSongSerializable of(PlaylistSong song) {
-        return new PlaylistSongSerializable(song.song().uuid(), song.timeAdded().toString());
+        return new PlaylistSongSerializable(song.song().getUuid(), song.timeAdded().toString());
     }
 }

@@ -1,11 +1,12 @@
 package bg.sofia.uni.fmi.mjt.spotify.client;
 
-import bg.sofia.uni.fmi.mjt.spotify.client.threads.ClientStreamPlayback;
+import javax.sound.sampled.SourceDataLine;
+import java.io.IOException;
 
 public interface SpotifyClientInterface {
     void start();
 
-    public ClientStreamPlayback getCurrentPlaybackThread();
+    void setSourceDataLine(SourceDataLine dataLine);
 
-    public void setCurrentPlaybackThread(ClientStreamPlayback currentPlaybackThread);
+    void disconnect() throws IOException;
 }

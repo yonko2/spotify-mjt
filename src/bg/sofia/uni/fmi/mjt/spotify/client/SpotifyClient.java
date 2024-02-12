@@ -1,24 +1,20 @@
 package bg.sofia.uni.fmi.mjt.spotify.client;
 
-import bg.sofia.uni.fmi.mjt.spotify.client.commands.DisconnectCommand;
+import bg.sofia.uni.fmi.mjt.spotify.server.commands.DisconnectCommand;
 import bg.sofia.uni.fmi.mjt.spotify.client.commands.PlayClientCommand;
-import bg.sofia.uni.fmi.mjt.spotify.client.threads.ClientStreamPlayback;
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.StopPlaybackCommand;
 
+import javax.sound.sampled.SourceDataLine;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Scanner;
 
 public class SpotifyClient implements SpotifyClientInterface {
-    private ClientStreamPlayback currentPlaybackThread;
-    private static final List<String> COMMANDS_LIST = List.of(
-        PlayClientCommand.COMMAND_STRING,
-        DisconnectCommand.COMMAND_STRING
-    );
+    private SourceDataLine dataLine;
+    private SocketChannel mainSocketChannel;
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_HOST = "localhost";
     private static final int BUFFER_SIZE = 512;
@@ -31,17 +27,18 @@ public class SpotifyClient implements SpotifyClientInterface {
     }
 
     public void start() {
-        try (SocketChannel socketChannel = initConnection(SERVER_HOST, SERVER_PORT);
+        try (SocketChannel socketChannel = connect(SERVER_HOST, SERVER_PORT);
              Scanner scanner = new Scanner(System.in)) {
+
+            this.mainSocketChannel = socketChannel;
 
             while (true) {
                 String clientInput = scanner.nextLine();
                 if (!hasConnection || clientInput.equalsIgnoreCase(DisconnectCommand.COMMAND_STRING)) {
-                    endConnection(socketChannel);
+                    disconnect();
                     break;
                 }
 
-//                if (COMMANDS_LIST.contains(clientInput.toLowerCase().split("\\s+")[0])) {
                 sendCommandToServer(clientInput, socketChannel);
             }
 
@@ -50,18 +47,12 @@ public class SpotifyClient implements SpotifyClientInterface {
         }
     }
 
-    private SocketChannel initConnection(String serverHost, int serverPort) throws IOException {
+    private SocketChannel connect(String serverHost, int serverPort) throws IOException {
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.connect(new InetSocketAddress(serverHost, serverPort));
         System.out.println("[CONNECTED] Connected to the server.");
         hasConnection = true;
         return socketChannel;
-    }
-
-    private void endConnection(SocketChannel socketChannel) throws IOException {
-        socketChannel.close();
-        System.out.println("[DISCONNECTED] Disconnected from the server.");
-        hasConnection = false;
     }
 
     private void sendCommandToServer(String userInput, SocketChannel socketChannel) throws IOException {
@@ -71,7 +62,7 @@ public class SpotifyClient implements SpotifyClientInterface {
         socketChannel.write(buffer);
 
         if (userInput.equalsIgnoreCase(StopPlaybackCommand.COMMAND_STRING)) {
-            currentPlaybackThread.interrupt();
+            dataLine.close();
         }
 
         String serverResponse = readServerResponse(socketChannel);
@@ -80,6 +71,10 @@ public class SpotifyClient implements SpotifyClientInterface {
             System.out.println("Now playing");
         } else {
             System.out.println("Response from server:" + System.lineSeparator() + serverResponse);
+        }
+
+        if (userInput.equalsIgnoreCase(DisconnectCommand.COMMAND_STRING)) {
+            disconnect();
         }
     }
 
@@ -93,11 +88,14 @@ public class SpotifyClient implements SpotifyClientInterface {
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
-    public ClientStreamPlayback getCurrentPlaybackThread() {
-        return currentPlaybackThread;
+    @Override
+    public void setSourceDataLine(SourceDataLine dataLine) {
+        this.dataLine = dataLine;
     }
 
-    public void setCurrentPlaybackThread(ClientStreamPlayback currentPlaybackThread) {
-        this.currentPlaybackThread = currentPlaybackThread;
+    @Override
+    public void disconnect() throws IOException {
+        this.mainSocketChannel.close();
+        hasConnection = false;
     }
 }

@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SpotifyServer implements SpotifyServerInterface {
-        private ServerStreamPlayback currentPlaybackThread;
+    private ServerStreamPlayback currentPlaybackThread;
     private final ConcurrentHashMap<String, User> emailToUser = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<User, List<Playlist>> playlists = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, List<Song>> songs = new ConcurrentHashMap<>();
@@ -69,56 +69,67 @@ public class SpotifyServer implements SpotifyServerInterface {
             ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
 
             while (true) {
-                int readyChannels = selector.select();
-                if (readyChannels == 0) {
-                    continue;
-                }
-
-                Set<SelectionKey> selectedKeys = selector.selectedKeys();
-                Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
-
-                while (keyIterator.hasNext()) {
-                    SelectionKey key = keyIterator.next();
-                    if (key.isReadable()) {
-                        System.out.println("Reading from client");
-                        SocketChannel sc = (SocketChannel) key.channel();
-
-                        buffer.clear();
-                        int r = sc.read(buffer);
-                        if (r < 0) {
-                            System.out.println("Client has closed the connection");
-                            sc.close();
-                            continue;
-                        }
-
-                        buffer.flip();
-                        byte[] bytes = new byte[buffer.remaining()];
-                        buffer.get(bytes);
-
-                        String cmd = new String(bytes, StandardCharsets.UTF_8).trim();
-                        System.out.println(cmd);
-                        CommandResponse cmdResponse = handleClientInput(cmd);
-
-                        buffer.clear();
-                        buffer.put(cmdResponse.message().getBytes());
-                        buffer.flip();
-                        sc.write(buffer);
-
-                    } else if (key.isAcceptable()) {
-                        ServerSocketChannel sockChannel = (ServerSocketChannel) key.channel();
-                        SocketChannel accept = sockChannel.accept();
-                        accept.configureBlocking(false);
-                        accept.register(selector, SelectionKey.OP_READ);
-                    }
-
-                    keyIterator.remove();
-                }
-
+                handleChannels(selector, buffer);
             }
 
         } catch (IOException e) {
             throw new RuntimeException("There is a problem with the server socket", e);
         }
+    }
+
+    private void handleChannels(Selector selector, ByteBuffer buffer) throws IOException {
+        int readyChannels = selector.select();
+        if (readyChannels == 0) {
+            return;
+        }
+
+        Set<SelectionKey> selectedKeys = selector.selectedKeys();
+        Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
+
+        while (keyIterator.hasNext()) {
+            SelectionKey key = keyIterator.next();
+            if (key.isReadable()) {
+                if (handleKeyReadable(key, buffer)) continue;
+            } else if (key.isAcceptable()) {
+                handleKeyAcceptable(key, selector);
+            }
+
+            keyIterator.remove();
+        }
+    }
+
+    private static void handleKeyAcceptable(SelectionKey key, Selector selector) throws IOException {
+        ServerSocketChannel sockChannel = (ServerSocketChannel) key.channel();
+        SocketChannel accept = sockChannel.accept();
+        accept.configureBlocking(false);
+        accept.register(selector, SelectionKey.OP_READ);
+    }
+
+    private boolean handleKeyReadable(SelectionKey key, ByteBuffer buffer) throws IOException {
+        System.out.println("Reading from client");
+        SocketChannel sc = (SocketChannel) key.channel();
+
+        buffer.clear();
+        int r = sc.read(buffer);
+        if (r < 0) {
+            System.out.println("Client has closed the connection");
+            sc.close();
+            return true;
+        }
+
+        buffer.flip();
+        byte[] bytes = new byte[buffer.remaining()];
+        buffer.get(bytes);
+
+        String cmd = new String(bytes, StandardCharsets.UTF_8).trim();
+        System.out.println(cmd);
+        CommandResponse cmdResponse = handleClientInput(cmd);
+
+        buffer.clear();
+        buffer.put(cmdResponse.message().getBytes());
+        buffer.flip();
+        sc.write(buffer);
+        return false;
     }
 
     private CommandResponse handleClientInput(String cmd) {
