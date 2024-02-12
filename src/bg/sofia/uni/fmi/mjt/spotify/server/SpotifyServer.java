@@ -22,13 +22,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class SpotifyServer implements SpotifyServerInterface {
-    private ServerStreamPlayback currentPlaybackThread;
-    private final ConcurrentHashMap<String, User> emailToUser = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<User, List<Playlist>> playlists = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, List<Song>> songs = new ConcurrentHashMap<>();
-    private User loggedUser = null;
+    private final ConcurrentMap<String, User> emailToUser = new ConcurrentHashMap<>();
+    private final ConcurrentMap<User, List<Playlist>> playlists = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, List<Song>> songs = new ConcurrentHashMap<>();
+    private final ConcurrentMap<SelectionKey, User> selectionKeyToUser = new ConcurrentHashMap<>();
+    private final ConcurrentMap<SelectionKey, ServerStreamPlayback> playbackThreads = new ConcurrentHashMap<>();
 
     public SpotifyServer() {
         try {
@@ -38,20 +39,21 @@ public class SpotifyServer implements SpotifyServerInterface {
         }
     }
 
-    public ConcurrentHashMap<String, User> getUsers() {
+    public ConcurrentMap<String, User> getUsers() {
         return emailToUser;
     }
 
-    public ConcurrentHashMap<String, List<Song>> getSongs() {
+    public ConcurrentMap<String, List<Song>> getSongs() {
         return songs;
     }
 
-    public ConcurrentHashMap<User, List<Playlist>> getPlaylists() {
+    public ConcurrentMap<User, List<Playlist>> getPlaylists() {
         return playlists;
     }
 
-    public User getLoggedUser() {
-        return loggedUser;
+    @Override
+    public ConcurrentMap<SelectionKey, User> getSelectionKeyToUser() {
+        return this.selectionKeyToUser;
     }
 
     public static final int SERVER_PORT = 7777;
@@ -121,7 +123,7 @@ public class SpotifyServer implements SpotifyServerInterface {
         buffer.get(bytes);
 
         String cmd = new String(bytes, StandardCharsets.UTF_8).trim();
-        CommandResponse cmdResponse = handleClientInput(cmd);
+        CommandResponse cmdResponse = handleClientInput(cmd, key);
 
         buffer.clear();
         buffer.put(cmdResponse.message().getBytes());
@@ -130,17 +132,12 @@ public class SpotifyServer implements SpotifyServerInterface {
         return false;
     }
 
-    private CommandResponse handleClientInput(String cmd) {
-        SpotifyCommand command = CommandParserService.parse(cmd, this);
+    private CommandResponse handleClientInput(String cmd, SelectionKey selectionKey) {
+        SpotifyCommand command = CommandParserService.parse(cmd, this, selectionKey);
         if (command == null) {
             return new CommandResponse("Invalid command. Please try again.", false);
         }
         return command.execute();
-    }
-
-    @Override
-    public void setLoggedUser(User user) {
-        this.loggedUser = user;
     }
 
     public static void main(String[] args) {
@@ -148,11 +145,8 @@ public class SpotifyServer implements SpotifyServerInterface {
         spotifyServer.start();
     }
 
-    public ServerStreamPlayback getCurrentPlaybackThread() {
-        return currentPlaybackThread;
-    }
-
-    public void setCurrentPlaybackThread(ServerStreamPlayback currentPlaybackThread) {
-        this.currentPlaybackThread = currentPlaybackThread;
+    @Override
+    public ConcurrentMap<SelectionKey, ServerStreamPlayback> getPlaybackThreads() {
+        return playbackThreads;
     }
 }

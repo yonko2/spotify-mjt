@@ -12,6 +12,7 @@ import bg.sofia.uni.fmi.mjt.spotify.server.commands.ShowPlaylistCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.StopPlaybackCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.TopCommand;
 
+import java.nio.channels.SelectionKey;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,26 +33,33 @@ public class CommandParserService {
         Pattern.compile(ShowPlaylistCommand.COMMAND_STRING + " (?<name>.+)");
     private static final Pattern PLAY_PATTERN = Pattern.compile(PlayServerCommand.COMMAND_STRING + " (?<name>.+)");
 
-    public static SpotifyCommand parse(String command, SpotifyServerInterface server) {
+    public static SpotifyCommand parse(String command, SpotifyServerInterface server, SelectionKey selectionKey) {
+        if (!server.getSelectionKeyToUser().containsKey(selectionKey)) {
+            return switch (command.split("\\s+")[0]) {
+                case RegisterCommand.COMMAND_STRING -> parseRegisterCommand(command, server);
+                case LoginCommand.COMMAND_STRING -> parseLoginCommand(command, server, selectionKey);
+                default -> null;
+            };
+        }
+
         return switch (command.split("\\s+")[0]) {
-            case RegisterCommand.COMMAND_STRING -> parseRegisterCommand(command, server);
-            case LoginCommand.COMMAND_STRING -> parseLoginCommand(command, server);
             case DisconnectCommand.COMMAND_STRING -> parseDisconnectCommand(command, server);
-            case StopPlaybackCommand.COMMAND_STRING -> parseStopPlaybackCommand(command, server);
+            case StopPlaybackCommand.COMMAND_STRING -> parseStopPlaybackCommand(command, server, selectionKey);
             case SearchCommand.COMMAND_STRING -> parseSearchCommand(command, server);
             case TopCommand.COMMAND_STRING -> parseTopCommand(command, server);
-            case CreatePlaylistCommand.COMMAND_STRING -> parseCreatePlaylistCommand(command, server);
+            case CreatePlaylistCommand.COMMAND_STRING -> parseCreatePlaylistCommand(command, server, selectionKey);
             case AddSongToPlaylistCommand.COMMAND_STRING -> parseAddSongToPlaylistCommand(command, server);
             case ShowPlaylistCommand.COMMAND_STRING -> parseShowPlaylistCommand(command, server);
-            case PlayServerCommand.COMMAND_STRING -> parsePlayCommand(command, server);
-            default -> throw new IllegalArgumentException("Invalid command");
+            case PlayServerCommand.COMMAND_STRING -> parsePlayCommand(command, server, selectionKey);
+            default -> null;
         };
     }
 
-    private static SpotifyCommand parseStopPlaybackCommand(String command, SpotifyServerInterface server) {
+    private static SpotifyCommand parseStopPlaybackCommand(String command, SpotifyServerInterface server,
+                                                           SelectionKey selectionKey) {
         Matcher matcher = STOP_PLAYBACK_PATTERN.matcher(command);
         if (matcher.matches()) {
-            return new StopPlaybackCommand(server);
+            return new StopPlaybackCommand(server, selectionKey);
         }
         return null;
     }
@@ -64,10 +72,11 @@ public class CommandParserService {
         return null;
     }
 
-    private static SpotifyCommand parseLoginCommand(String command, SpotifyServerInterface server) {
+    private static SpotifyCommand parseLoginCommand(String command, SpotifyServerInterface server,
+                                                    SelectionKey selectionKey) {
         Matcher matcher = LOGIN_PATTERN.matcher(command);
         if (matcher.matches()) {
-            return new LoginCommand(matcher.group("email"), matcher.group("password"), server);
+            return new LoginCommand(matcher.group("email"), matcher.group("password"), server, selectionKey);
         }
         return null;
     }
@@ -96,10 +105,10 @@ public class CommandParserService {
         return null;
     }
 
-    private static SpotifyCommand parseCreatePlaylistCommand(String command, SpotifyServerInterface server) {
+    private static SpotifyCommand parseCreatePlaylistCommand(String command, SpotifyServerInterface server, SelectionKey selectionKey) {
         Matcher matcher = CREATE_PLAYLIST_PATTERN.matcher(command);
         if (matcher.matches()) {
-            return new CreatePlaylistCommand(matcher.group("name"), server);
+            return new CreatePlaylistCommand(matcher.group("name"), server, selectionKey);
         }
         return null;
     }
@@ -120,10 +129,11 @@ public class CommandParserService {
         return null;
     }
 
-    private static SpotifyCommand parsePlayCommand(String command, SpotifyServerInterface server) {
+    private static SpotifyCommand parsePlayCommand(String command, SpotifyServerInterface server,
+                                                   SelectionKey selectionKey) {
         Matcher matcher = PLAY_PATTERN.matcher(command);
         if (matcher.matches()) {
-            return new PlayServerCommand(matcher.group("name"), server);
+            return new PlayServerCommand(matcher.group("name"), server, selectionKey);
         }
         return null;
     }

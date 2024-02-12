@@ -10,6 +10,7 @@ import bg.sofia.uni.fmi.mjt.spotify.server.services.PersistenceService;
 import bg.sofia.uni.fmi.mjt.spotify.server.services.PlaybackService;
 import com.google.gson.Gson;
 
+import java.nio.channels.SelectionKey;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -17,21 +18,27 @@ public class PlayServerCommand implements SpotifyCommand {
     public static final String COMMAND_STRING = "play";
     private final String name;
     private final SpotifyServerInterface server;
+    private final SelectionKey selectionKey;
     private static final Gson GSON = new Gson();
 
-    public PlayServerCommand(String name, SpotifyServerInterface server) {
+    public PlayServerCommand(String name, SpotifyServerInterface server, SelectionKey selectionKey) {
         this.name = name;
         this.server = server;
+        this.selectionKey = selectionKey;
     }
 
     @Override
     public CommandResponse execute() {
+        if (server.getPlaybackThreads().containsKey(selectionKey)) {
+            return new CommandResponse("There is already a song playing", false);
+        }
+
         // for now get the first result
         Song song = server.getSongs().get(name).getFirst();
         Path path = Paths.get(PersistenceService.DATA_DIRECTORY + "/songs/" + song.getSourceFilepath());
 
         ServerStreamPlayback serverStreamPlayback = new ServerStreamPlayback(path);
-        server.setCurrentPlaybackThread(serverStreamPlayback);
+        server.getPlaybackThreads().put(selectionKey, serverStreamPlayback);
         serverStreamPlayback.start();
 
         song.increaseStreams();
@@ -40,7 +47,6 @@ public class PlayServerCommand implements SpotifyCommand {
             return new CommandResponse(GSON.toJson(
                 PlaybackService.getAudioFormatSerializable(song)), true);
         } catch (PlaybackServiceException e) {
-            // end socket connection
             return new CommandResponse("There was a problem while trying to play the song", false);
         }
     }

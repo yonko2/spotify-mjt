@@ -6,6 +6,8 @@ import java.io.IOException;
 public interface SpotifyClientInterface {
     void start();
 
+    SourceDataLine getSourceDataLine();
+
     void setSourceDataLine(SourceDataLine dataLine);
 
     void disconnect() throws IOException;

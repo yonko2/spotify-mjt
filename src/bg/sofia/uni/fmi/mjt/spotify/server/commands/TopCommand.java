@@ -18,19 +18,23 @@ public class TopCommand implements SpotifyCommand {
 
     @Override
     public CommandResponse execute() {
-        var result = AnalyticsService.getMostListenedSongs(server, number);
+        try {
+            var result = AnalyticsService.getMostListenedSongs(server, number);
 
-        StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
 
-        for (int i = 0; i < result.size(); i++) {
-            Song song = result.get(i);
-            stringBuilder.append(i + 1).append(". ")
-                .append(song.getArtist()).append(" - ")
-                .append(song.getTitle()).append(" - ")
-                .append(song.getStreams()).append(" times played")
-                .append(System.lineSeparator());
+            for (int i = 0; i < result.size(); i++) {
+                Song song = result.get(i);
+                stringBuilder.append(i + 1).append(". ")
+                    .append(song.getArtist()).append(" - ")
+                    .append(song.getTitle()).append(" - ")
+                    .append(song.getStreams()).append(" times played")
+                    .append(System.lineSeparator());
+            }
+
+            return new CommandResponse(stringBuilder.toString(), true);
+        } catch (IllegalArgumentException e) {
+            return new CommandResponse("Enter a positive number of songs", false);
         }
-
-        return new CommandResponse(stringBuilder.toString(), true);
     }
 }

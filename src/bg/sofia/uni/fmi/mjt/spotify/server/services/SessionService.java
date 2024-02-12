@@ -5,32 +5,36 @@ import bg.sofia.uni.fmi.mjt.spotify.server.exceptions.PasswordEncryptionExceptio
 import bg.sofia.uni.fmi.mjt.spotify.server.exceptions.SessionServiceException;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.User;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
+import java.nio.channels.SelectionKey;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class SessionService {
-    private static final int BYTE_SIZE = 16;
-    private static final int ITERATION_COUNT = 65536;
-    private static final int KEY_LENGTH = 128;
-    private static final String ALGORITHM = "PBKDF2WithHmacSHA1";
+    public static final int HEX_CONST = 0xFF;
+    public static final String ALGORITHM = "MD5";
 
-    private static String hashPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[BYTE_SIZE];
-        random.nextBytes(salt);
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATION_COUNT, KEY_LENGTH);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance(ALGORITHM);
-        return new String(factory.generateSecret(spec).getEncoded());
+    private static String hashPassword(String password)
+        throws NoSuchAlgorithmException, InvalidKeySpecException, PasswordEncryptionException {
+        try {
+            MessageDigest digest = java.security.MessageDigest.getInstance(ALGORITHM);
+            digest.update(password.getBytes());
+            byte[] messageDigest = digest.digest();
+
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : messageDigest) hexString.append(Integer.toHexString(HEX_CONST & b));
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            throw new PasswordEncryptionException("Error while hashing the password", e);
+        }
     }
 
-    public static void register(ConcurrentHashMap<String, User> users, String email, String password)
+    public static void register(ConcurrentMap<String, User> users, String email, String password)
         throws PasswordEncryptionException {
         if (users.containsKey(email)) {
             throw new IllegalArgumentException("User with this email already exists");
@@ -43,19 +47,23 @@ public class SessionService {
         }
     }
 
-    public static void login(String email, String password, SpotifyServerInterface server)
+    public static void login(String email, String password, SpotifyServerInterface server, SelectionKey selectionKey)
         throws PasswordEncryptionException, SessionServiceException {
         if (!server.getUsers().containsKey(email)) {
             throw new SessionServiceException("User with this email does not exist");
         }
 
         User user = server.getUsers().get(email);
+        if (server.getSelectionKeyToUser().containsValue(user)) {
+            throw new SessionServiceException("User is already logged in");
+        }
+
         try {
             if (!user.hashPass().equals(hashPassword(password))) {
                 throw new SessionServiceException("Invalid password");
             }
 
-            server.setLoggedUser(user);
+            server.getSelectionKeyToUser().put(selectionKey, user);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new PasswordEncryptionException("Error while hashing the password", e);
         }

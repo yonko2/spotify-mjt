@@ -8,6 +8,10 @@ import java.util.List;
 
 public class AnalyticsService {
     public static List<Song> getMostListenedSongs(SpotifyServerInterface server, int number) {
+        if (number <= 0) {
+            throw new IllegalArgumentException("Number must be positive");
+        }
+
         return server.getSongs().values().stream()
             .flatMap(List::stream)
             .sorted(Comparator.comparing(Song::getStreams).reversed())

@@ -5,23 +5,21 @@ import bg.sofia.uni.fmi.mjt.spotify.server.models.Song;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.User;
 import bg.sofia.uni.fmi.mjt.spotify.server.threads.ServerStreamPlayback;
 
+import java.nio.channels.SelectionKey;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public interface SpotifyServerInterface {
-    ConcurrentHashMap<String, User> getUsers();
+    ConcurrentMap<String, User> getUsers();
 
-    ConcurrentHashMap<String, List<Song>> getSongs();
+    ConcurrentMap<String, List<Song>> getSongs();
 
-    ConcurrentHashMap<User, List<Playlist>> getPlaylists();
+    ConcurrentMap<User, List<Playlist>> getPlaylists();
 
-    User getLoggedUser();
+    ConcurrentMap<SelectionKey, User> getSelectionKeyToUser();
 
     void start();
 
-    void setLoggedUser(User user);
-
-    public ServerStreamPlayback getCurrentPlaybackThread();
-
-    public void setCurrentPlaybackThread(ServerStreamPlayback currentPlaybackThread);
+    ConcurrentMap<SelectionKey, ServerStreamPlayback> getPlaybackThreads();
 }

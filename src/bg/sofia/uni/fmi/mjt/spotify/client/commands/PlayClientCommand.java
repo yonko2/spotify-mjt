@@ -22,6 +22,10 @@ public class PlayClientCommand implements SpotifyCommand {
 
     @Override
     public CommandResponse execute() {
+        if (spotifyClient.getSourceDataLine() != null) {
+            return new CommandResponse("Playback already started", false);
+        }
+
         AudioFormatSerializable audioFormatSerializable = GSON.fromJson(audioFormatJson, AudioFormatSerializable.class);
         AudioFormat audioFormat = AudioFormatSerializable.toAudioFormat(audioFormatSerializable);
 

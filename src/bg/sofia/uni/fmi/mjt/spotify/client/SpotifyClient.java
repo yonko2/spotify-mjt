@@ -49,6 +49,11 @@ public class SpotifyClient implements SpotifyClientInterface {
         }
     }
 
+    @Override
+    public SourceDataLine getSourceDataLine() {
+        return this.dataLine;
+    }
+
     private SocketChannel connect(String serverHost, int serverPort) throws IOException {
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.connect(new InetSocketAddress(serverHost, serverPort));
@@ -63,21 +68,27 @@ public class SpotifyClient implements SpotifyClientInterface {
         buffer.flip();
         socketChannel.write(buffer);
 
-        if (userInput.equalsIgnoreCase(StopPlaybackCommand.COMMAND_STRING)) {
-            dataLine.close();
-        }
+        handleClientStopPlayback(userInput);
 
         String serverResponse = readServerResponse(socketChannel);
         if (serverResponse.contains("encoding")) {
-            new PlayClientCommand(serverResponse, this).execute();
-            System.out.println("Now playing");
-        } else {
-            System.out.println(serverResponse);
+            serverResponse = new PlayClientCommand(serverResponse, this).execute().message();
         }
+
+        System.out.println(serverResponse);
 
         if (serverResponse.equals(LoginCommand.SUCCESS_RESPONSE.message())) {
             logged = true;
             printHelpMenu(logged);
+        }
+    }
+
+    private void handleClientStopPlayback(String userInput) {
+        if (logged && userInput.equalsIgnoreCase(StopPlaybackCommand.COMMAND_STRING)) {
+            if (dataLine != null) {
+                dataLine.close();
+                dataLine = null;
+            }
         }
     }
 
@@ -98,13 +109,14 @@ public class SpotifyClient implements SpotifyClientInterface {
 
     @Override
     public void disconnect() throws IOException {
+        handleClientStopPlayback(StopPlaybackCommand.COMMAND_STRING);
         this.mainSocketChannel.close();
     }
 
     private static void printHelpMenu(boolean logged) {
         if (logged) {
             System.out.println("""
-                
+                                
                 Available commands:
                 play <song>
                 stop
@@ -117,7 +129,7 @@ public class SpotifyClient implements SpotifyClientInterface {
                 """);
         } else {
             System.out.println("""
-                
+                                
                 Available commands:
                 register <username> <password>
                 login <username> <password>

@@ -5,7 +5,7 @@
     "album": "Animals",
     "artist": "Pink Floyd",
     "timeSeconds": 1025,
-    "streams": 1,
+    "streams": 9,
     "sourceFilepath": "dogs.wav"
   },
   {
@@ -23,7 +23,7 @@
     "album": "The Dark Side Of The Moon",
     "artist": "Pink Floyd",
     "timeSeconds": 416,
-    "streams": 2,
+    "streams": 3,
     "sourceFilepath": "time.wav"
   }
 ]
