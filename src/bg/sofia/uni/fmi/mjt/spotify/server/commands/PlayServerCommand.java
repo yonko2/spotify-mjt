@@ -33,11 +33,13 @@ public class PlayServerCommand implements SpotifyCommand {
             return new CommandResponse("There is already a song playing", false);
         }
 
+        int port = PlaybackService.findFreePort();
+
         // for now get the first result
         Song song = server.getSongs().get(name).getFirst();
         Path path = Paths.get(PersistenceService.DATA_DIRECTORY + "/songs/" + song.getSourceFilepath());
 
-        ServerStreamPlayback serverStreamPlayback = new ServerStreamPlayback(path);
+        ServerStreamPlayback serverStreamPlayback = new ServerStreamPlayback(path, port);
         server.getPlaybackThreads().put(selectionKey, serverStreamPlayback);
         serverStreamPlayback.start();
 
@@ -45,7 +47,7 @@ public class PlayServerCommand implements SpotifyCommand {
 
         try {
             return new CommandResponse(GSON.toJson(
-                PlaybackService.getAudioFormatSerializable(song)), true);
+                PlaybackService.getAudioFormatSerializable(song, port)), true);
         } catch (PlaybackServiceException e) {
             return new CommandResponse("There was a problem while trying to play the song", false);
         }

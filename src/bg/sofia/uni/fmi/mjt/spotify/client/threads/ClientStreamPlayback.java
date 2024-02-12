@@ -12,20 +12,22 @@ import java.net.Socket;
 
 public class ClientStreamPlayback extends Thread {
     private static final int BUFFER_SIZE = 4096;
-    public static final int PORT = 6666;
+    private static final String HOST = "localhost";
     private final AudioFormat audioFormat;
     private final SpotifyClientInterface spotifyClient;
+    private final int port;
 
-    public ClientStreamPlayback(AudioFormat audioFormat, SpotifyClientInterface spotifyClient) {
+    public ClientStreamPlayback(AudioFormat audioFormat, SpotifyClientInterface spotifyClient, int port) {
         this.audioFormat = audioFormat;
         this.spotifyClient = spotifyClient;
+        this.port = port;
     }
 
     @Override
     public void run() {
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
 
-        try (Socket socket = new Socket("localhost", PORT);
+        try (Socket socket = new Socket(HOST, port);
              SourceDataLine dataLine = (SourceDataLine) AudioSystem.getLine(info);
              AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(
                  new BufferedInputStream(socket.getInputStream()));

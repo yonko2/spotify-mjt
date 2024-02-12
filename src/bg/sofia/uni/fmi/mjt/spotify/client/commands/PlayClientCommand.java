@@ -29,7 +29,8 @@ public class PlayClientCommand implements SpotifyCommand {
         AudioFormatSerializable audioFormatSerializable = GSON.fromJson(audioFormatJson, AudioFormatSerializable.class);
         AudioFormat audioFormat = AudioFormatSerializable.toAudioFormat(audioFormatSerializable);
 
-        ClientStreamPlayback clientStreamPlayback = new ClientStreamPlayback(audioFormat, spotifyClient);
+        ClientStreamPlayback clientStreamPlayback =
+            new ClientStreamPlayback(audioFormat, spotifyClient, audioFormatSerializable.port());
         clientStreamPlayback.start();
 
         return new CommandResponse("Playback started on client", true);

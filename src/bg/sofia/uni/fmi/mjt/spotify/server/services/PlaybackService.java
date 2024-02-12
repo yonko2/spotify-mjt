@@ -9,6 +9,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.IOException;
+import java.net.ServerSocket;
 
 public class PlaybackService {
     private static final String SONGS_DIRECTORY = PersistenceService.DATA_DIRECTORY + "/songs/";
@@ -20,8 +21,17 @@ public class PlaybackService {
         }
     }
 
-    public static AudioFormatSerializable getAudioFormatSerializable(Song song) throws PlaybackServiceException {
+    public static AudioFormatSerializable getAudioFormatSerializable(Song song, int port) throws PlaybackServiceException {
         AudioFormat audioFormat = getAudioFormat(song);
-        return AudioFormatSerializable.of(audioFormat);
+        return AudioFormatSerializable.of(audioFormat, port);
+    }
+
+    public static int findFreePort() {
+        try (ServerSocket serverSocket = new ServerSocket(0)) {
+            return serverSocket.getLocalPort();
+        } catch (IOException e) {
+            System.out.println("An error occurred while trying to find a free port.");
+        }
+        return -1;
     }
 }

@@ -8,17 +8,18 @@ import java.net.Socket;
 import java.nio.file.Path;
 
 public class ServerStreamPlayback extends Thread {
-    public static final int PORT = 6666;
     public static final int BUFFER_SIZE = 2048;
     private final Path path;
+    private final int port;
 
-    public ServerStreamPlayback(Path path) {
+    public ServerStreamPlayback(Path path, int port) {
         this.path = path;
+        this.port = port;
     }
 
     @Override
     public void run() {
-        try (ServerSocket serverSocket = new ServerSocket(PORT);
+        try (ServerSocket serverSocket = new ServerSocket(port);
              FileInputStream in = new FileInputStream(path.toString())) {
             if (serverSocket.isBound()) {
                 Socket client = serverSocket.accept();

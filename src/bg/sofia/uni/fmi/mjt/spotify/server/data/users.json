@@ -4,5 +4,11 @@
     "email": "a",
     "hashPass": "cc175b9c0f1b6a831c399e269772661",
     "playlistIDs": []
+  },
+  {
+    "uuid": "f70271e0-87aa-4705-8d23-46b2feec0005",
+    "email": "b",
+    "hashPass": "92eb5ffee6ae2fec3ad71c777531578f",
+    "playlistIDs": []
   }
 ]
