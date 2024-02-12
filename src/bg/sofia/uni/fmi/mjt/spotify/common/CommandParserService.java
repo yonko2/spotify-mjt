@@ -18,17 +18,18 @@ import java.util.regex.Pattern;
 public class CommandParserService {
     private static final Pattern REGISTER_PATTERN =
         Pattern.compile(RegisterCommand.COMMAND_STRING + " (?<email>\\S+) (?<password>\\S+)");
-    private static final Pattern LOGIN_PATTERN = Pattern.compile(LoginCommand.COMMAND_STRING + " (?<password>\\S+)");
+    private static final Pattern LOGIN_PATTERN =
+        Pattern.compile(LoginCommand.COMMAND_STRING + " (?<email>\\S+) (?<password>\\S+)");
     private static final Pattern DISCONNECT_PATTERN = Pattern.compile(DisconnectCommand.COMMAND_STRING);
     private static final Pattern STOP_PLAYBACK_PATTERN = Pattern.compile(StopPlaybackCommand.COMMAND_STRING);
-    private static final Pattern SEARCH_PATTERN = Pattern.compile(SearchCommand.COMMAND_STRING + " (?<words>\\S+)");
+    private static final Pattern SEARCH_PATTERN = Pattern.compile(SearchCommand.COMMAND_STRING + " (?<words>.+)");
     private static final Pattern TOP_PATTERN = Pattern.compile(TopCommand.COMMAND_STRING + " (?<number>\\d+)");
     private static final Pattern CREATE_PLAYLIST_PATTERN =
-        Pattern.compile(CreatePlaylistCommand.COMMAND_STRING + " (?<name>\\S+)");
+        Pattern.compile(CreatePlaylistCommand.COMMAND_STRING + " (?<name>.+)");
     private static final Pattern ADD_SONG_TO_PATTERN =
-        Pattern.compile(AddSongToPlaylistCommand.COMMAND_STRING + " (?<name>\\S+) (?<song>\\S+)");
+        Pattern.compile(AddSongToPlaylistCommand.COMMAND_STRING + " (?<name>.+)/(?<song>.+)");
     private static final Pattern SHOW_PLAYLIST_PATTERN =
-        Pattern.compile(ShowPlaylistCommand.COMMAND_STRING + " (?<name>\\S+)");
+        Pattern.compile(ShowPlaylistCommand.COMMAND_STRING + " (?<name>.+)");
     private static final Pattern PLAY_PATTERN = Pattern.compile(PlayServerCommand.COMMAND_STRING + " (?<name>.+)");
 
     public static SpotifyCommand parse(String command, SpotifyServerInterface server) {

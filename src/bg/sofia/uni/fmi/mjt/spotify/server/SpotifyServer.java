@@ -106,7 +106,6 @@ public class SpotifyServer implements SpotifyServerInterface {
     }
 
     private boolean handleKeyReadable(SelectionKey key, ByteBuffer buffer) throws IOException {
-        System.out.println("Reading from client");
         SocketChannel sc = (SocketChannel) key.channel();
 
         buffer.clear();
@@ -122,7 +121,6 @@ public class SpotifyServer implements SpotifyServerInterface {
         buffer.get(bytes);
 
         String cmd = new String(bytes, StandardCharsets.UTF_8).trim();
-        System.out.println(cmd);
         CommandResponse cmdResponse = handleClientInput(cmd);
 
         buffer.clear();

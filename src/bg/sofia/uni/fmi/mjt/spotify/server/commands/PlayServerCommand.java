@@ -34,6 +34,8 @@ public class PlayServerCommand implements SpotifyCommand {
         server.setCurrentPlaybackThread(serverStreamPlayback);
         serverStreamPlayback.start();
 
+        song.increaseStreams();
+
         try {
             return new CommandResponse(GSON.toJson(
                 PlaybackService.getAudioFormatSerializable(song)), true);

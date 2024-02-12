@@ -134,7 +134,7 @@ public class PersistenceService {
     private static List<Playlist> loadPlaylists(List<Song> songList,
                                                 List<PlaylistSerializable> playlistSerializableList) {
         Map<UUID, Song> songIDMap = new HashMap<>();
-        songList.forEach(song -> songIDMap.put(song.uuid(), song));
+        songList.forEach(song -> songIDMap.put(song.getUuid(), song));
 
         return playlistSerializableList.stream().map(playlistSerializable -> {
             List<PlaylistSong> playlistSongs = playlistSerializable.songList().stream()

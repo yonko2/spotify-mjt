@@ -5,17 +5,8 @@
     "album": "Animals",
     "artist": "Pink Floyd",
     "timeSeconds": 1025,
-    "streams": 0,
+    "streams": 1,
     "sourceFilepath": "dogs.wav"
-  },
-  {
-    "uuid": "975d3f82-b2be-4070-bb4b-ef5b2d775a47",
-    "title": "Time",
-    "album": "The Dark Side Of The Moon",
-    "artist": "Pink Floyd",
-    "timeSeconds": 416,
-    "streams": 0,
-    "sourceFilepath": "time.wav"
   },
   {
     "uuid": "6c57d760-142b-41d1-9cd3-3823a985f60f",
@@ -25,5 +16,14 @@
     "timeSeconds": 264,
     "streams": 0,
     "sourceFilepath": "under-the-bridge.wav"
+  },
+  {
+    "uuid": "975d3f82-b2be-4070-bb4b-ef5b2d775a47",
+    "title": "Time",
+    "album": "The Dark Side Of The Moon",
+    "artist": "Pink Floyd",
+    "timeSeconds": 416,
+    "streams": 2,
+    "sourceFilepath": "time.wav"
   }
 ]

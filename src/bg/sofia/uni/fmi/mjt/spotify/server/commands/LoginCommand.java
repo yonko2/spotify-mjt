@@ -4,6 +4,7 @@ import bg.sofia.uni.fmi.mjt.spotify.common.models.CommandResponse;
 import bg.sofia.uni.fmi.mjt.spotify.common.SpotifyCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.SpotifyServerInterface;
 import bg.sofia.uni.fmi.mjt.spotify.server.exceptions.PasswordEncryptionException;
+import bg.sofia.uni.fmi.mjt.spotify.server.exceptions.SessionServiceException;
 import bg.sofia.uni.fmi.mjt.spotify.server.services.SessionService;
 
 public class LoginCommand implements SpotifyCommand {
@@ -11,6 +12,7 @@ public class LoginCommand implements SpotifyCommand {
     private final String email;
     private final String password;
     private final SpotifyServerInterface server;
+    public static final CommandResponse SUCCESS_RESPONSE = new CommandResponse("Logged in successfully", true);
 
     public LoginCommand(String email, String password, SpotifyServerInterface server) {
         this.email = email;
@@ -22,8 +24,8 @@ public class LoginCommand implements SpotifyCommand {
     public CommandResponse execute() {
         try {
             SessionService.login(email, password, server);
-            return new CommandResponse("User logged in successfully", true);
-        } catch (PasswordEncryptionException e) {
+            return SUCCESS_RESPONSE;
+        } catch (SessionServiceException | PasswordEncryptionException e) {
             return new CommandResponse("Error: " + e.getMessage(), false);
         }
     }

@@ -2,6 +2,7 @@ package bg.sofia.uni.fmi.mjt.spotify.server.services;
 
 import bg.sofia.uni.fmi.mjt.spotify.server.SpotifyServerInterface;
 import bg.sofia.uni.fmi.mjt.spotify.server.exceptions.PasswordEncryptionException;
+import bg.sofia.uni.fmi.mjt.spotify.server.exceptions.SessionServiceException;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.User;
 
 import javax.crypto.SecretKeyFactory;
@@ -43,15 +44,15 @@ public class SessionService {
     }
 
     public static void login(String email, String password, SpotifyServerInterface server)
-        throws PasswordEncryptionException {
+        throws PasswordEncryptionException, SessionServiceException {
         if (!server.getUsers().containsKey(email)) {
-            throw new IllegalArgumentException("User with this email does not exist");
+            throw new SessionServiceException("User with this email does not exist");
         }
 
         User user = server.getUsers().get(email);
         try {
             if (!user.hashPass().equals(hashPassword(password))) {
-                throw new IllegalArgumentException("Invalid password");
+                throw new SessionServiceException("Invalid password");
             }
 
             server.setLoggedUser(user);

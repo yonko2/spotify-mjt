@@ -9,7 +9,6 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 import java.io.BufferedInputStream;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class ClientStreamPlayback extends Thread {
     private static final int BUFFER_SIZE = 4096;
@@ -45,8 +44,6 @@ public class ClientStreamPlayback extends Thread {
 
                 dataLine.drain();
             }
-        } catch (SocketException se) {
-            System.out.println("stopped playback");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

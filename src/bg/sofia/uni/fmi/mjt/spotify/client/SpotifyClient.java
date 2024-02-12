@@ -2,6 +2,7 @@ package bg.sofia.uni.fmi.mjt.spotify.client;
 
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.DisconnectCommand;
 import bg.sofia.uni.fmi.mjt.spotify.client.commands.PlayClientCommand;
+import bg.sofia.uni.fmi.mjt.spotify.server.commands.LoginCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.StopPlaybackCommand;
 
 import javax.sound.sampled.SourceDataLine;
@@ -19,7 +20,7 @@ public class SpotifyClient implements SpotifyClientInterface {
     private static final String SERVER_HOST = "localhost";
     private static final int BUFFER_SIZE = 512;
     private static ByteBuffer buffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
-    private boolean hasConnection = true;
+    private boolean logged = false;
 
     public static void main(String[] args) {
         SpotifyClientInterface client = new SpotifyClient();
@@ -34,12 +35,13 @@ public class SpotifyClient implements SpotifyClientInterface {
 
             while (true) {
                 String clientInput = scanner.nextLine();
-                if (!hasConnection || clientInput.equalsIgnoreCase(DisconnectCommand.COMMAND_STRING)) {
+
+                sendCommandToServer(clientInput, socketChannel);
+
+                if (clientInput.equalsIgnoreCase(DisconnectCommand.COMMAND_STRING)) {
                     disconnect();
                     break;
                 }
-
-                sendCommandToServer(clientInput, socketChannel);
             }
 
         } catch (IOException e) {
@@ -50,8 +52,8 @@ public class SpotifyClient implements SpotifyClientInterface {
     private SocketChannel connect(String serverHost, int serverPort) throws IOException {
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.connect(new InetSocketAddress(serverHost, serverPort));
-        System.out.println("[CONNECTED] Connected to the server.");
-        hasConnection = true;
+        System.out.println("Connected to the server.");
+        printHelpMenu(false);
         return socketChannel;
     }
 
@@ -70,11 +72,12 @@ public class SpotifyClient implements SpotifyClientInterface {
             new PlayClientCommand(serverResponse, this).execute();
             System.out.println("Now playing");
         } else {
-            System.out.println("Response from server:" + System.lineSeparator() + serverResponse);
+            System.out.println(serverResponse);
         }
 
-        if (userInput.equalsIgnoreCase(DisconnectCommand.COMMAND_STRING)) {
-            disconnect();
+        if (serverResponse.equals(LoginCommand.SUCCESS_RESPONSE.message())) {
+            logged = true;
+            printHelpMenu(logged);
         }
     }
 
@@ -96,6 +99,30 @@ public class SpotifyClient implements SpotifyClientInterface {
     @Override
     public void disconnect() throws IOException {
         this.mainSocketChannel.close();
-        hasConnection = false;
+    }
+
+    private static void printHelpMenu(boolean logged) {
+        if (logged) {
+            System.out.println("""
+                
+                Available commands:
+                play <song>
+                stop
+                search <words>
+                top <number>
+                create-playlist <name_of_the_playlist>
+                add-song-to <name_of_the_playlist>/<song>
+                show-playlist <name_of_the_playlist>
+                disconnect
+                """);
+        } else {
+            System.out.println("""
+                
+                Available commands:
+                register <username> <password>
+                login <username> <password>
+                disconnect
+                """);
+        }
     }
 }
