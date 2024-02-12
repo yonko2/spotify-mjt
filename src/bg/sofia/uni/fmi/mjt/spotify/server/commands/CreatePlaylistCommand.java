@@ -1,6 +1,6 @@
 package bg.sofia.uni.fmi.mjt.spotify.server.commands;
 
-import bg.sofia.uni.fmi.mjt.spotify.common.CommandResponse;
+import bg.sofia.uni.fmi.mjt.spotify.common.models.CommandResponse;
 import bg.sofia.uni.fmi.mjt.spotify.common.SpotifyCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.SpotifyServerInterface;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Playlist;

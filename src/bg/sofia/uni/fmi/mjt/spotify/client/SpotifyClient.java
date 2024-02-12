@@ -11,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;
 
-// NIO, blocking
 public class SpotifyClient implements SpotifyClientInterface {
     private static final List<String> COMMANDS_LIST = List.of(
         PlayClientCommand.COMMAND_STRING,
@@ -74,8 +73,11 @@ public class SpotifyClient implements SpotifyClientInterface {
         System.out.println("Command sent to the server! Waiting for response.");
 
         String serverResponse = readServerResponse(socketChannel);
-
-        System.out.println("Response from server:" + System.lineSeparator() + serverResponse);
+        if (serverResponse.startsWith("[encoding:")) {
+            new PlayClientCommand(serverResponse).execute();
+        } else {
+            System.out.println("Response from server:" + System.lineSeparator() + serverResponse);
+        }
     }
 
     private String readServerResponse(SocketChannel socketChannel) throws IOException {

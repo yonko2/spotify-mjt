@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public interface SpotifyServerInterface {
     ConcurrentHashMap<String, User> getUsers();
 
-    List<Song> getSongs();
+    ConcurrentHashMap<String, List<Song>> getSongs();
 
     ConcurrentHashMap<User, List<Playlist>> getPlaylists();
 

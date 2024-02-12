@@ -24,10 +24,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PersistenceService {
-    private static final String DATA_DIRECTORY = "src/bg/sofia/uni/fmi/mjt/spotify/server/data";
-    private static final String USERS_PATH = DATA_DIRECTORY + "/users.json";
-    private static final String SONGS_PATH = DATA_DIRECTORY + "/songs/songs.json";
-    private static final String PLAYLISTS_PATH = DATA_DIRECTORY + "/playlists.json";
+    public static final String DATA_DIRECTORY = "src/bg/sofia/uni/fmi/mjt/spotify/server/data";
+    public static final String USERS_PATH = DATA_DIRECTORY + "/users.json";
+    public static final String SONGS_PATH = DATA_DIRECTORY + "/songs/songs.json";
+    public static final String PLAYLISTS_PATH = DATA_DIRECTORY + "/playlists.json";
     private static final Object USERS_LOCK = new Object();
     private static final Object SONGS_LOCK = new Object();
     private static final Object PLAYLISTS_LOCK = new Object();
@@ -47,7 +47,10 @@ public class PersistenceService {
             spotifyServer.getPlaylists().put(user, user.playlists());
         });
 
-        spotifyServer.getSongs().addAll(songList);
+        songList.forEach(song -> {
+            spotifyServer.getSongs().putIfAbsent(song.title(), List.of());
+            spotifyServer.getSongs().get(song.title()).add(song);
+        });
     }
 
     public static void saveApplicationState(SpotifyServerInterface spotifyServer) throws PersistenceServiceException {
@@ -56,7 +59,7 @@ public class PersistenceService {
         List<PlaylistSerializable> playlistSerializableList = spotifyServer.getPlaylists().values().stream()
             .flatMap(Collection::stream)
             .map(PlaylistSerializable::of).toList();
-        List<Song> songList = spotifyServer.getSongs();
+        List<Song> songList = spotifyServer.getSongs().values().stream().flatMap(Collection::stream).toList();
 
         saveUsersToFile(userSerializableList);
         savePlaylistsToFile(playlistSerializableList);

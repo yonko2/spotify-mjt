@@ -1,7 +1,7 @@
 package bg.sofia.uni.fmi.mjt.spotify.server;
 
 import bg.sofia.uni.fmi.mjt.spotify.common.CommandParserService;
-import bg.sofia.uni.fmi.mjt.spotify.common.CommandResponse;
+import bg.sofia.uni.fmi.mjt.spotify.common.models.CommandResponse;
 import bg.sofia.uni.fmi.mjt.spotify.common.SpotifyCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.exceptions.PersistenceServiceException;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Playlist;
@@ -17,7 +17,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SpotifyServer implements SpotifyServerInterface {
     private final ConcurrentHashMap<String, User> emailToUser = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<User, List<Playlist>> playlists = new ConcurrentHashMap<>();
-    private final List<Song> songs = new ArrayList<>();
+    private final ConcurrentHashMap<String, List<Song>> songs = new ConcurrentHashMap<>();
     private User loggedUser = null;
 
     public SpotifyServer() {
@@ -41,7 +40,7 @@ public class SpotifyServer implements SpotifyServerInterface {
         return emailToUser;
     }
 
-    public List<Song> getSongs() {
+    public ConcurrentHashMap<String, List<Song>> getSongs() {
         return songs;
     }
 
