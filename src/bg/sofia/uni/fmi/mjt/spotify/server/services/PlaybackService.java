@@ -13,6 +13,7 @@ import java.net.ServerSocket;
 
 public class PlaybackService {
     private static final String SONGS_DIRECTORY = PersistenceService.DATA_DIRECTORY + "/songs/";
+
     public static AudioFormat getAudioFormat(Song song) throws PlaybackServiceException {
         try {
             return AudioSystem.getAudioInputStream(new File(SONGS_DIRECTORY + song.getSourceFilepath())).getFormat();
@@ -21,7 +22,8 @@ public class PlaybackService {
         }
     }
 
-    public static AudioFormatSerializable getAudioFormatSerializable(Song song, int port) throws PlaybackServiceException {
+    public static AudioFormatSerializable getAudioFormatSerializable(Song song, int port)
+        throws PlaybackServiceException {
         AudioFormat audioFormat = getAudioFormat(song);
         return AudioFormatSerializable.of(audioFormat, port);
     }

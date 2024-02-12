@@ -7,7 +7,6 @@ import bg.sofia.uni.fmi.mjt.spotify.server.threads.ServerStreamPlayback;
 
 import java.nio.channels.SelectionKey;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public interface SpotifyServerInterface {

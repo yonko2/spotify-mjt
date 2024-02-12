@@ -4,7 +4,8 @@ import javax.sound.sampled.AudioFormat;
 import java.io.Serializable;
 
 public record AudioFormatSerializable(String encoding, float sampleRate, int sampleSizeInBits, int channels,
-                                      int frameSize, float frameRate, boolean bigEndian, int port) implements Serializable {
+                                      int frameSize, float frameRate, boolean bigEndian, int port)
+    implements Serializable {
     public static AudioFormatSerializable of(AudioFormat audioFormat, int port) {
         return new AudioFormatSerializable(audioFormat.getEncoding().toString(),
             audioFormat.getSampleRate(),

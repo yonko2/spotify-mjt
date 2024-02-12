@@ -105,7 +105,8 @@ public class CommandParserService {
         return null;
     }
 
-    private static SpotifyCommand parseCreatePlaylistCommand(String command, SpotifyServerInterface server, SelectionKey selectionKey) {
+    private static SpotifyCommand parseCreatePlaylistCommand(String command, SpotifyServerInterface server,
+                                                             SelectionKey selectionKey) {
         Matcher matcher = CREATE_PLAYLIST_PATTERN.matcher(command);
         if (matcher.matches()) {
             return new CreatePlaylistCommand(matcher.group("name"), server, selectionKey);
