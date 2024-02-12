@@ -8,7 +8,8 @@ import java.util.List;
 
 public class AnalyticsService {
     public static List<Song> getMostListenedSongs(SpotifyServerInterface server, int number) {
-        return server.getSongs().stream()
+        return server.getSongs().values().stream()
+            .flatMap(List::stream)
             .sorted(Comparator.comparing(Song::streams).reversed())
             .limit(number)
             .toList();

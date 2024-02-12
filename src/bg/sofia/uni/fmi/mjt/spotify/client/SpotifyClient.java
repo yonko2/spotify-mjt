@@ -2,6 +2,8 @@ package bg.sofia.uni.fmi.mjt.spotify.client;
 
 import bg.sofia.uni.fmi.mjt.spotify.client.commands.DisconnectCommand;
 import bg.sofia.uni.fmi.mjt.spotify.client.commands.PlayClientCommand;
+import bg.sofia.uni.fmi.mjt.spotify.client.threads.ClientStreamPlayback;
+import bg.sofia.uni.fmi.mjt.spotify.server.commands.StopPlaybackCommand;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class SpotifyClient implements SpotifyClientInterface {
+    private ClientStreamPlayback currentPlaybackThread;
     private static final List<String> COMMANDS_LIST = List.of(
         PlayClientCommand.COMMAND_STRING,
         DisconnectCommand.COMMAND_STRING
@@ -38,11 +41,8 @@ public class SpotifyClient implements SpotifyClientInterface {
                     break;
                 }
 
-                if (COMMANDS_LIST.contains(clientInput.toLowerCase())) {
-                    sendCommandToServer(clientInput, socketChannel);
-                } else {
-                    System.out.println("Invalid command. Please try again.");
-                }
+//                if (COMMANDS_LIST.contains(clientInput.toLowerCase().split("\\s+")[0])) {
+                sendCommandToServer(clientInput, socketChannel);
             }
 
         } catch (IOException e) {
@@ -70,11 +70,14 @@ public class SpotifyClient implements SpotifyClientInterface {
         buffer.flip();
         socketChannel.write(buffer);
 
-        System.out.println("Command sent to the server! Waiting for response.");
+        if (userInput.equalsIgnoreCase(StopPlaybackCommand.COMMAND_STRING)) {
+            currentPlaybackThread.interrupt();
+        }
 
         String serverResponse = readServerResponse(socketChannel);
-        if (serverResponse.startsWith("[encoding:")) {
-            new PlayClientCommand(serverResponse).execute();
+        if (serverResponse.contains("encoding")) {
+            new PlayClientCommand(serverResponse, this).execute();
+            System.out.println("Now playing");
         } else {
             System.out.println("Response from server:" + System.lineSeparator() + serverResponse);
         }
@@ -88,5 +91,13 @@ public class SpotifyClient implements SpotifyClientInterface {
         buffer.get(bytes);
 
         return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    public ClientStreamPlayback getCurrentPlaybackThread() {
+        return currentPlaybackThread;
+    }
+
+    public void setCurrentPlaybackThread(ClientStreamPlayback currentPlaybackThread) {
+        this.currentPlaybackThread = currentPlaybackThread;
     }
 }

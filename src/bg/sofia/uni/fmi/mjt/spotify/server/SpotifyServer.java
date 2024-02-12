@@ -7,6 +7,7 @@ import bg.sofia.uni.fmi.mjt.spotify.server.exceptions.PersistenceServiceExceptio
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Playlist;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Song;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.User;
+import bg.sofia.uni.fmi.mjt.spotify.server.threads.ServerStreamPlayback;
 import bg.sofia.uni.fmi.mjt.spotify.server.services.PersistenceService;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SpotifyServer implements SpotifyServerInterface {
+        private ServerStreamPlayback currentPlaybackThread;
     private final ConcurrentHashMap<String, User> emailToUser = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<User, List<Playlist>> playlists = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, List<Song>> songs = new ConcurrentHashMap<>();
@@ -94,6 +96,7 @@ public class SpotifyServer implements SpotifyServerInterface {
                         buffer.get(bytes);
 
                         String cmd = new String(bytes, StandardCharsets.UTF_8).trim();
+                        System.out.println(cmd);
                         CommandResponse cmdResponse = handleClientInput(cmd);
 
                         buffer.clear();
@@ -134,5 +137,13 @@ public class SpotifyServer implements SpotifyServerInterface {
     public static void main(String[] args) {
         SpotifyServerInterface spotifyServer = new SpotifyServer();
         spotifyServer.start();
+    }
+
+    public ServerStreamPlayback getCurrentPlaybackThread() {
+        return currentPlaybackThread;
+    }
+
+    public void setCurrentPlaybackThread(ServerStreamPlayback currentPlaybackThread) {
+        this.currentPlaybackThread = currentPlaybackThread;
     }
 }

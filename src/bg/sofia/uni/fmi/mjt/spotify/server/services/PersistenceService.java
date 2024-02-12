@@ -16,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class PersistenceService {
         });
 
         songList.forEach(song -> {
-            spotifyServer.getSongs().putIfAbsent(song.title(), List.of());
+            spotifyServer.getSongs().putIfAbsent(song.title(), new ArrayList<>());
             spotifyServer.getSongs().get(song.title()).add(song);
         });
     }

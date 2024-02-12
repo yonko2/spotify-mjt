@@ -9,6 +9,7 @@ import bg.sofia.uni.fmi.mjt.spotify.server.commands.PlayServerCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.RegisterCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.SearchCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.ShowPlaylistCommand;
+import bg.sofia.uni.fmi.mjt.spotify.server.commands.StopPlaybackCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.TopCommand;
 
 import java.util.regex.Matcher;
@@ -16,24 +17,26 @@ import java.util.regex.Pattern;
 
 public class CommandParserService {
     private static final Pattern REGISTER_PATTERN =
-        Pattern.compile(RegisterCommand.COMMAND_STRING + "(?<email>\\S+) (?<password>\\S+)");
-    private static final Pattern LOGIN_PATTERN = Pattern.compile(LoginCommand.COMMAND_STRING + "(?<password>\\S+)");
+        Pattern.compile(RegisterCommand.COMMAND_STRING + " (?<email>\\S+) (?<password>\\S+)");
+    private static final Pattern LOGIN_PATTERN = Pattern.compile(LoginCommand.COMMAND_STRING + " (?<password>\\S+)");
     private static final Pattern DISCONNECT_PATTERN = Pattern.compile(DisconnectCommand.COMMAND_STRING);
-    private static final Pattern SEARCH_PATTERN = Pattern.compile(SearchCommand.COMMAND_STRING + "(?<words>\\S+)");
-    private static final Pattern TOP_PATTERN = Pattern.compile(TopCommand.COMMAND_STRING + "(?<number>\\d+)");
+    private static final Pattern STOP_PLAYBACK_PATTERN = Pattern.compile(StopPlaybackCommand.COMMAND_STRING);
+    private static final Pattern SEARCH_PATTERN = Pattern.compile(SearchCommand.COMMAND_STRING + " (?<words>\\S+)");
+    private static final Pattern TOP_PATTERN = Pattern.compile(TopCommand.COMMAND_STRING + " (?<number>\\d+)");
     private static final Pattern CREATE_PLAYLIST_PATTERN =
-        Pattern.compile(CreatePlaylistCommand.COMMAND_STRING + "(?<name>\\S+)");
+        Pattern.compile(CreatePlaylistCommand.COMMAND_STRING + " (?<name>\\S+)");
     private static final Pattern ADD_SONG_TO_PATTERN =
-        Pattern.compile(AddSongToPlaylistCommand.COMMAND_STRING + "(?<name>\\S+) (?<song>\\S+)");
+        Pattern.compile(AddSongToPlaylistCommand.COMMAND_STRING + " (?<name>\\S+) (?<song>\\S+)");
     private static final Pattern SHOW_PLAYLIST_PATTERN =
-        Pattern.compile(ShowPlaylistCommand.COMMAND_STRING + "(?<name>\\S+)");
-    private static final Pattern PLAY_PATTERN = Pattern.compile(PlayServerCommand.COMMAND_STRING + "(?<name>\\S+)");
+        Pattern.compile(ShowPlaylistCommand.COMMAND_STRING + " (?<name>\\S+)");
+    private static final Pattern PLAY_PATTERN = Pattern.compile(PlayServerCommand.COMMAND_STRING + " (?<name>.+)");
 
     public static SpotifyCommand parse(String command, SpotifyServerInterface server) {
         return switch (command.split("\\s+")[0]) {
             case RegisterCommand.COMMAND_STRING -> parseRegisterCommand(command, server);
             case LoginCommand.COMMAND_STRING -> parseLoginCommand(command, server);
             case DisconnectCommand.COMMAND_STRING -> parseDisconnectCommand(command, server);
+            case StopPlaybackCommand.COMMAND_STRING -> parseStopPlaybackCommand(command, server);
             case SearchCommand.COMMAND_STRING -> parseSearchCommand(command, server);
             case TopCommand.COMMAND_STRING -> parseTopCommand(command, server);
             case CreatePlaylistCommand.COMMAND_STRING -> parseCreatePlaylistCommand(command, server);
@@ -42,6 +45,14 @@ public class CommandParserService {
             case PlayServerCommand.COMMAND_STRING -> parsePlayCommand(command, server);
             default -> throw new IllegalArgumentException("Invalid command");
         };
+    }
+
+    private static SpotifyCommand parseStopPlaybackCommand(String command, SpotifyServerInterface server) {
+        Matcher matcher = STOP_PLAYBACK_PATTERN.matcher(command);
+        if (matcher.matches()) {
+            return new StopPlaybackCommand(server);
+        }
+        return null;
     }
 
     private static SpotifyCommand parseRegisterCommand(String command, SpotifyServerInterface server) {

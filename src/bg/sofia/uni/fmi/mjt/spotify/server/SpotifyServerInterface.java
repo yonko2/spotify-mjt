@@ -3,6 +3,7 @@ package bg.sofia.uni.fmi.mjt.spotify.server;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Playlist;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Song;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.User;
+import bg.sofia.uni.fmi.mjt.spotify.server.threads.ServerStreamPlayback;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,4 +20,8 @@ public interface SpotifyServerInterface {
     void start();
 
     void setLoggedUser(User user);
+
+    public ServerStreamPlayback getCurrentPlaybackThread();
+
+    public void setCurrentPlaybackThread(ServerStreamPlayback currentPlaybackThread);
 }
