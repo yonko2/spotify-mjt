@@ -20,5 +20,7 @@ public interface SpotifyServerInterface {
 
     void start();
 
+    void shutdown();
+
     ConcurrentMap<SelectionKey, ServerStreamPlayback> getPlaybackThreads();
 }

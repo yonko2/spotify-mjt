@@ -4,23 +4,24 @@ import bg.sofia.uni.fmi.mjt.spotify.server.SpotifyServerInterface;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Playlist;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Song;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.User;
-import bg.sofia.uni.fmi.mjt.spotify.server.services.PlaylistService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.nio.channels.SelectionKey;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ShowPlaylistCommandTest {
+class CreatePlaylistCommandTest {
     private static final SpotifyServerInterface serverMock = mock(SpotifyServerInterface.class);
     private static final List<Song> songsList = List.of(
         new Song(UUID.randomUUID(), "song1", "album1", "artist1", 1, 1, "src1"),
@@ -56,25 +57,19 @@ class ShowPlaylistCommandTest {
         songsList.forEach(song -> songs.put(song.getTitle(), List.of(song)));
         usersList.forEach(user -> users.put(user.email(), user));
 
-        playlists.put(usersList.get(0), List.of(playlistsList.get(0)));
-        playlists.put(usersList.get(1), List.of(playlistsList.get(1)));
+        playlists.put(usersList.get(0), new ArrayList<>(List.of(playlistsList.get(0))));
+        playlists.put(usersList.get(1), new ArrayList<>(List.of(playlistsList.get(1))));
 
         selectionKeyToUser.put(selectionKeyList.get(1), usersList.get(1));
     }
 
     @Test
-    void testShowPlaylistCommand() {
-        ShowPlaylistCommand showPlaylistCommand = new ShowPlaylistCommand("playlist1", serverMock);
-        showPlaylistCommand.execute();
+    void testExecuteSuccess() {
+        CreatePlaylistCommand createPlaylistCommand =
+            new CreatePlaylistCommand("playlist3", serverMock, selectionKeyList.get(1));
+        var res = createPlaylistCommand.execute();
 
-        assertEquals(PlaylistService.getPlaylistInfo(playlistsList.get(0), usersList.get(0)),
-            showPlaylistCommand.execute().message());
+        assertTrue(res.isSuccessful());
+        assertEquals(2, playlists.get(selectionKeyToUser.get(selectionKeyList.get(1))).size());
     }
-
-    @Test
-    void testShowPlaylistNoPlaylistThrows() {
-        ShowPlaylistCommand showPlaylistCommand = new ShowPlaylistCommand("playlist3", serverMock);
-        assertEquals("Playlist not found", showPlaylistCommand.execute().message());
-    }
-
 }

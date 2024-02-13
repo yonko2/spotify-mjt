@@ -13,6 +13,7 @@ import bg.sofia.uni.fmi.mjt.spotify.server.services.PersistenceService;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -60,11 +61,14 @@ public class SpotifyServer implements SpotifyServerInterface {
     public static final int SERVER_PORT = 7777;
     private static final String SERVER_HOST = "localhost";
     private static final int BUFFER_SIZE = 1024;
+    private ServerSocketChannel serverSocketChannel;
 
     public void start() {
         try (ServerSocketChannel serverSocketChannel = ServerSocketChannel.open()) {
             serverSocketChannel.bind(new InetSocketAddress(SERVER_HOST, SERVER_PORT));
             serverSocketChannel.configureBlocking(false);
+
+            this.serverSocketChannel = serverSocketChannel;
 
             Selector selector = Selector.open();
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -78,6 +82,12 @@ public class SpotifyServer implements SpotifyServerInterface {
         } catch (IOException e) {
             System.out.println("There is a problem with the server socket");
             SpotifyLogger.getInstance().log(e.getMessage());
+        } finally {
+            try {
+                PersistenceService.saveApplicationState(this);
+            } catch (PersistenceServiceException e) {
+                SpotifyLogger.getInstance().log(e.getMessage());
+            }
         }
     }
 
@@ -93,13 +103,16 @@ public class SpotifyServer implements SpotifyServerInterface {
         while (keyIterator.hasNext()) {
             SelectionKey key = keyIterator.next();
             if (key.isReadable()) {
-                if (handleKeyReadable(key, buffer)) continue;
+                if (handleKeyReadable(key, buffer)) {
+                    continue;
+                }
             } else if (key.isAcceptable()) {
                 handleKeyAcceptable(key, selector);
             }
 
             keyIterator.remove();
         }
+
     }
 
     private static void handleKeyAcceptable(SelectionKey key, Selector selector) throws IOException {
@@ -111,9 +124,15 @@ public class SpotifyServer implements SpotifyServerInterface {
 
     private boolean handleKeyReadable(SelectionKey key, ByteBuffer buffer) throws IOException {
         SocketChannel sc = (SocketChannel) key.channel();
-
         buffer.clear();
-        int r = sc.read(buffer);
+        int r = 0;
+        try {
+            sc.read(buffer);
+        } catch (SocketException e) {
+            System.out.println("Client has closed the connection");
+            SpotifyLogger.getInstance().log(e.getMessage());
+            return true;
+        }
         if (r < 0) {
             System.out.println("Client has closed the connection");
 
@@ -124,11 +143,9 @@ public class SpotifyServer implements SpotifyServerInterface {
         buffer.flip();
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
-
         String cmd = new String(bytes, StandardCharsets.UTF_8).trim();
         CommandResponse cmdResponse = handleClientInput(cmd, key);
         SpotifyLogger.getInstance().log(cmdResponse.message());
-
         buffer.clear();
         buffer.put(cmdResponse.message().getBytes());
         buffer.flip();
@@ -142,6 +159,17 @@ public class SpotifyServer implements SpotifyServerInterface {
             return new CommandResponse("Invalid command. Please try again.", false);
         }
         return command.execute();
+    }
+
+    public void shutdown() {
+        if (serverSocketChannel != null && serverSocketChannel.isOpen()) {
+            try {
+                serverSocketChannel.close();
+            } catch (IOException ioe) {
+                SpotifyLogger.getInstance().log(ioe.getMessage());
+                throw new RuntimeException(ioe);
+            }
+        }
     }
 
     public static void main(String[] args) {

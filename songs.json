@@ -1,0 +1,56 @@
+[
+  {
+    "uuid": "975d3f82-b2be-4070-bb4b-ef5b2d123a47",
+    "title": "nokia",
+    "album": "nokia",
+    "artist": "nokia",
+    "timeSeconds": 5,
+    "streams": 10,
+    "sourceFilepath": "nokia.wav"
+  },
+  {
+    "uuid": "925d3f82-b2be-4070-bb4b-ef5b2d123a47",
+    "title": "samsung",
+    "album": "samsung",
+    "artist": "samsung",
+    "timeSeconds": 3,
+    "streams": 3,
+    "sourceFilepath": "samsung.wav"
+  },
+  {
+    "uuid": "53f1002c-b21f-47b8-89ee-7b9d08a9b1e9",
+    "title": "Dogs",
+    "album": "Animals",
+    "artist": "Pink Floyd",
+    "timeSeconds": 1025,
+    "streams": 10,
+    "sourceFilepath": "dogs.wav"
+  },
+  {
+    "uuid": "6c57d760-142b-41d1-9cd3-3823a985f60f",
+    "title": "Under The Bridge",
+    "album": "Blood Sugar Sex Magik",
+    "artist": "Red Hot Chili Peppers",
+    "timeSeconds": 264,
+    "streams": 0,
+    "sourceFilepath": "under-the-bridge.wav"
+  },
+  {
+    "uuid": "975d3f82-b2be-4070-bb4b-ef5b2d775a47",
+    "title": "Time",
+    "album": "The Dark Side Of The Moon",
+    "artist": "Pink Floyd",
+    "timeSeconds": 416,
+    "streams": 4,
+    "sourceFilepath": "time.wav"
+  },
+  {
+    "uuid": "975d3f82-b2be-4070-bb4b-ef5b2a675a47",
+    "title": "Time Solo",
+    "album": "The Dark Side Of The Moon",
+    "artist": "Pink Floyd",
+    "timeSeconds": 105,
+    "streams": 2,
+    "sourceFilepath": "time-solo.wav"
+  }
+]

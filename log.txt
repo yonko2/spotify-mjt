@@ -1,0 +1,78 @@
+2024-02-13T17:31:01.3920386 Error while reading data from file
+2024-02-13T17:55:25.5107746 Error while reading data from file
+2024-02-13T18:00:54.1568098 Error while reading data from file
+2024-02-13T18:01:30.9215134 Error while reading data from file
+2024-02-13T19:05:00.5246084 Address already in use: bind
+2024-02-13T19:08:11.6696237 Address already in use: bind
+2024-02-13T19:10:16.6905546 Address already in use: bind
+2024-02-13T19:14:14.9095318 Address already in use: bind
+2024-02-13T19:22:55.0907226 test.wav (The system cannot find the file specified)
+2024-02-13T19:27:25.9834588 test.wav (The system cannot find the file specified)
+2024-02-13T19:28:40.9600937 test.wav (The system cannot find the file specified)
+2024-02-13T22:57:34.6896907 Error: User with this email does not exist
+2024-02-13T22:57:40.4764582 User registered successfully
+2024-02-13T22:57:43.0710987 Invalid command. Please try again.
+2024-02-13T22:57:46.522583 Logged in successfully
+2024-02-13T22:57:48.7266069 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54762}
+2024-02-13T22:57:54.4929555 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54764}
+2024-02-13T22:58:01.0668141 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54766}
+2024-02-13T22:58:14.7406511 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54768}
+2024-02-13T22:58:23.798316 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54770}
+2024-02-13T23:01:29.1396107 User registered successfully
+2024-02-13T23:01:31.8800751 Logged in successfully
+2024-02-13T23:01:36.0777679 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54791}
+2024-02-13T23:01:44.7828297 Song not found
+2024-02-13T23:01:52.0920939 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54794}
+2024-02-13T23:01:53.5113866 No playback is currently running
+2024-02-13T23:01:57.6967294 No playback is currently running
+2024-02-13T23:02:00.2099931 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54796}
+2024-02-13T23:02:06.6684418 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54798}
+2024-02-13T23:02:17.2563228 Playlist created successfully
+2024-02-13T23:02:23.3279457 Song added to playlist successfully
+2024-02-13T23:02:27.5174157 nokia - nokia - 0:5 - nokia - Streams: 8
+
+2024-02-13T23:02:41.1124923 Playlist name: p1
+Author: a
+Songs count: 1
+Created on: Feb 13, 2024, 11:02:17 PM
+Last updated: Feb 13, 2024, 11:02:23 PM
+2024-02-13T23:03:12.4831949 Error: User is already logged in
+2024-02-13T23:03:16.2270465 User registered successfully
+2024-02-13T23:03:29.4387137 Invalid command. Please try again.
+2024-02-13T23:03:37.3098219 Logged in successfully
+2024-02-13T23:03:39.6628323 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54804}
+2024-02-13T23:03:42.2737783 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54806}
+2024-02-13T23:03:52.0408203 1. nokia - nokia - 0:5 - nokia - Streams: 10
+2. Pink Floyd - Dogs - 17:5 - Animals - Streams: 10
+
+2024-02-13T23:03:58.1699672 1. nokia - nokia - 0:5 - nokia - Streams: 10
+2. Pink Floyd - Dogs - 17:5 - Animals - Streams: 10
+3. Pink Floyd - Time - 6:56 - The Dark Side Of The Moon - Streams: 4
+4. samsung - samsung - 0:3 - samsung - Streams: 2
+
+2024-02-13T23:04:05.8981896 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54809}
+2024-02-13T23:04:11.0676697 Song not found
+2024-02-13T23:04:25.7502341 Song not found
+2024-02-13T23:04:30.6632256 nokia - nokia - 0:5 - nokia - Streams: 10
+Pink Floyd - Dogs - 17:5 - Animals - Streams: 10
+Pink Floyd - Time - 6:56 - The Dark Side Of The Moon - Streams: 4
+
+2024-02-13T23:04:42.3381584 Disconnected successfully
+2024-02-13T23:05:18.6320478 Connection reset
+2024-02-13T23:09:43.2843521 Logged in successfully
+2024-02-13T23:09:46.8244487 Invalid command. Please try again.
+2024-02-13T23:09:46.8244487 Connection reset by peer
+2024-02-13T23:10:23.6026451 Logged in successfully
+2024-02-13T23:10:46.6149035 Invalid command. Please try again.
+2024-02-13T23:10:46.6159906 Connection reset by peer
+2024-02-13T23:11:57.6023195 Logged in successfully
+2024-02-13T23:12:00.7436613 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":54890}
+2024-02-13T23:16:25.292773 test.wav (The system cannot find the file specified)
+2024-02-13T23:23:15.5587899 Logged in successfully
+2024-02-13T23:23:21.7044714 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":55059}
+2024-02-13T23:23:35.2748998 Song not found
+2024-02-13T23:24:08.6732699 Song not found
+2024-02-13T23:24:29.0464441 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":55063}
+2024-02-13T23:24:31.5526052 Playback stopped
+2024-02-13T23:24:53.7998266 {"encoding":"PCM_SIGNED","sampleRate":48000.0,"sampleSizeInBits":16,"channels":2,"frameSize":4,"frameRate":48000.0,"bigEndian":false,"port":55065}
+2024-02-13T23:25:07.9459881 Playback stopped

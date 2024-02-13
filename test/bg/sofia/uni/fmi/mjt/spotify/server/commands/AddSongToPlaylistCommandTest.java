@@ -4,7 +4,6 @@ import bg.sofia.uni.fmi.mjt.spotify.server.SpotifyServerInterface;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Playlist;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Song;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.User;
-import bg.sofia.uni.fmi.mjt.spotify.server.services.PlaylistService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ShowPlaylistCommandTest {
+class AddSongToPlaylistCommandTest {
     private static final SpotifyServerInterface serverMock = mock(SpotifyServerInterface.class);
     private static final List<Song> songsList = List.of(
         new Song(UUID.randomUUID(), "song1", "album1", "artist1", 1, 1, "src1"),
@@ -43,8 +42,7 @@ class ShowPlaylistCommandTest {
     private static final ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<User, List<Playlist>> playlists = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<SelectionKey, User> selectionKeyToUser = new ConcurrentHashMap<>();
-    private static final List<SelectionKey> selectionKeyList =
-        List.of(mock(SelectionKey.class), mock(SelectionKey.class));
+    private static final List<SelectionKey> selectionKeyList = List.of(mock(SelectionKey.class), mock(SelectionKey.class));
 
     @BeforeAll
     static void setUp() {
@@ -63,18 +61,23 @@ class ShowPlaylistCommandTest {
     }
 
     @Test
-    void testShowPlaylistCommand() {
-        ShowPlaylistCommand showPlaylistCommand = new ShowPlaylistCommand("playlist1", serverMock);
-        showPlaylistCommand.execute();
-
-        assertEquals(PlaylistService.getPlaylistInfo(playlistsList.get(0), usersList.get(0)),
-            showPlaylistCommand.execute().message());
+    void executeSuccess() {
+        var command = new AddSongToPlaylistCommand("playlist1", "song1", serverMock);
+        command.execute();
+        assertEquals(playlistsList.get(0).songList().size(), 1);
     }
 
     @Test
-    void testShowPlaylistNoPlaylistThrows() {
-        ShowPlaylistCommand showPlaylistCommand = new ShowPlaylistCommand("playlist3", serverMock);
-        assertEquals("Playlist not found", showPlaylistCommand.execute().message());
+    void executeNoPlaylistThrows() {
+        var command = new AddSongToPlaylistCommand("playlist3", "song1", serverMock);
+        var response = command.execute();
+        assertEquals("Playlist not found", response.message());
     }
 
+    @Test
+    void executeNoSongThrows() {
+        var command = new AddSongToPlaylistCommand("playlist1", "song5", serverMock);
+        var response = command.execute();
+        assertEquals("Song not found", response.message());
+    }
 }

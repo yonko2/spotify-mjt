@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class SpotifyLogger implements Logger {
-    private static final String FILE_PATH = "src/bg/sofia/uni/fmi/mjt/spotify/server/logger/log.txt";
+    private static final String FILE_PATH = "log.txt";
     private static Logger instance;
     private PrintWriter writer;
 

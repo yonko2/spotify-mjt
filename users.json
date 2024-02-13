@@ -1,0 +1,14 @@
+[
+  {
+    "uuid": "9d9417df-c6ac-41b8-b7ea-489afc8ee819",
+    "email": "a",
+    "hashPass": "cc175b9c0f1b6a831c399e269772661",
+    "playlistIDs": []
+  },
+  {
+    "uuid": "14a2758a-2ddd-4763-974a-016343bf5672",
+    "email": "b",
+    "hashPass": "92eb5ffee6ae2fec3ad71c777531578f",
+    "playlistIDs": []
+  }
+]

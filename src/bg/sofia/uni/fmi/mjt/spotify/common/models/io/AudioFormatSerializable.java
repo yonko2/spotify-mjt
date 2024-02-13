@@ -19,7 +19,8 @@ public record AudioFormatSerializable(String encoding, float sampleRate, int sam
 
     public static AudioFormat toAudioFormat(AudioFormatSerializable audioFormatSerializable) {
         return new AudioFormat(
-            new AudioFormat.Encoding(audioFormatSerializable.encoding()),
+            new AudioFormat.Encoding(
+                audioFormatSerializable.encoding()),
             audioFormatSerializable.sampleRate(),
             audioFormatSerializable.sampleSizeInBits(),
             audioFormatSerializable.channels(),

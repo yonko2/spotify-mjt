@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 public class PlaybackService {
-    private static final String SONGS_DIRECTORY = PersistenceService.DATA_DIRECTORY + "/songs/";
+    private static final String SONGS_DIRECTORY = "songs/";
 
     public static AudioFormat getAudioFormat(Song song) throws PlaybackServiceException {
         try {

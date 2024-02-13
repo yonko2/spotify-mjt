@@ -6,7 +6,6 @@ import bg.sofia.uni.fmi.mjt.spotify.server.SpotifyServerInterface;
 import bg.sofia.uni.fmi.mjt.spotify.server.exceptions.PlaybackServiceException;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Song;
 import bg.sofia.uni.fmi.mjt.spotify.server.threads.ServerStreamPlayback;
-import bg.sofia.uni.fmi.mjt.spotify.server.services.PersistenceService;
 import bg.sofia.uni.fmi.mjt.spotify.server.services.PlaybackService;
 import com.google.gson.Gson;
 
@@ -47,7 +46,7 @@ public class PlayServerCommand implements SpotifyCommand {
 
         // for now get the first result
         Song song = server.getSongs().get(name).getFirst();
-        Path path = Paths.get(PersistenceService.DATA_DIRECTORY + "/songs/" + song.getSourceFilepath());
+        Path path = Paths.get("songs/" + song.getSourceFilepath());
 
         ServerStreamPlayback serverStreamPlayback = new ServerStreamPlayback(path, port, onFinish);
         server.getPlaybackThreads().put(selectionKey, serverStreamPlayback);

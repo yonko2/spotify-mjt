@@ -25,10 +25,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PersistenceService {
-    public static final String DATA_DIRECTORY = "src/bg/sofia/uni/fmi/mjt/spotify/server/data";
-    public static final String USERS_PATH = DATA_DIRECTORY + "/users.json";
-    public static final String SONGS_PATH = DATA_DIRECTORY + "/songs/songs.json";
-    public static final String PLAYLISTS_PATH = DATA_DIRECTORY + "/playlists.json";
+    public static final String USERS_PATH = "users.json";
+    public static final String SONGS_PATH = "songs.json";
+    public static final String PLAYLISTS_PATH = "playlists.json";
     private static final Object USERS_LOCK = new Object();
     private static final Object SONGS_LOCK = new Object();
     private static final Object PLAYLISTS_LOCK = new Object();
