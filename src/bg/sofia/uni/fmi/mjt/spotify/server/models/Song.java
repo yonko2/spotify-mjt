@@ -3,6 +3,7 @@ package bg.sofia.uni.fmi.mjt.spotify.server.models;
 import java.util.UUID;
 
 public class Song {
+    private static final int SECONDS_IN_MINUTE = 60;
     private final UUID uuid;
     private final String title;
     private final String album;
@@ -39,6 +40,7 @@ public class Song {
 
     private int streams;
     private final String sourceFilepath;
+
     public Song(UUID uuid, String title, String album, String artist, int timeSeconds, int streams,
                 String sourceFilepath) {
 
@@ -57,5 +59,20 @@ public class Song {
 
     public static Song of(String title, String album, String artist, int timeSeconds, String sourceFilepath) {
         return new Song(UUID.randomUUID(), title, album, artist, timeSeconds, 0, sourceFilepath);
+    }
+
+    public String getSongInfo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(artist).append(" - ")
+            .append(title).append(" - ")
+            .append(timeSeconds / SECONDS_IN_MINUTE)
+            .append(":")
+            .append(timeSeconds % SECONDS_IN_MINUTE)
+            .append(" ")
+            .append(album).append(" - ")
+            .append(streams).append(" times played ")
+            .append("Streams: ")
+            .append(streams);
+        return sb.toString();
     }
 }

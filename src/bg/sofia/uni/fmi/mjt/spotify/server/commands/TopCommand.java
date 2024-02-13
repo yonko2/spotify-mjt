@@ -25,10 +25,9 @@ public class TopCommand implements SpotifyCommand {
 
             for (int i = 0; i < result.size(); i++) {
                 Song song = result.get(i);
-                stringBuilder.append(i + 1).append(". ")
-                    .append(song.getArtist()).append(" - ")
-                    .append(song.getTitle()).append(" - ")
-                    .append(song.getStreams()).append(" times played")
+                stringBuilder.append(i + 1)
+                    .append(". ")
+                    .append(song.getSongInfo())
                     .append(System.lineSeparator());
             }
 

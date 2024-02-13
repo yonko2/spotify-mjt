@@ -4,6 +4,7 @@ import bg.sofia.uni.fmi.mjt.spotify.common.models.CommandResponse;
 import bg.sofia.uni.fmi.mjt.spotify.common.SpotifyCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.SpotifyServerInterface;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Playlist;
+import bg.sofia.uni.fmi.mjt.spotify.server.services.PlaylistService;
 
 import java.nio.channels.SelectionKey;
 
@@ -22,7 +23,7 @@ public class CreatePlaylistCommand implements SpotifyCommand {
     @Override
     public CommandResponse execute() {
         server.getPlaylists().get(server.getSelectionKeyToUser().get(selectionKey))
-            .add(Playlist.of(name));
+            .add(PlaylistService.createPlaylist(name));
 
         return new CommandResponse("Playlist created successfully", true);
     }

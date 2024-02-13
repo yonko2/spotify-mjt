@@ -35,6 +35,10 @@ public class PlayServerCommand implements SpotifyCommand {
 
         int port = PlaybackService.findFreePort();
 
+        if (!server.getSongs().containsKey(name)) {
+            return new CommandResponse("Song not found", false);
+        }
+
         // for now get the first result
         Song song = server.getSongs().get(name).getFirst();
         Path path = Paths.get(PersistenceService.DATA_DIRECTORY + "/songs/" + song.getSourceFilepath());
