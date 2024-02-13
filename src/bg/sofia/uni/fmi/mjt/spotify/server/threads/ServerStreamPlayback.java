@@ -1,5 +1,7 @@
 package bg.sofia.uni.fmi.mjt.spotify.server.threads;
 
+import bg.sofia.uni.fmi.mjt.spotify.server.logger.SpotifyLogger;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,7 +36,7 @@ public class ServerStreamPlayback extends Thread {
 
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            SpotifyLogger.getInstance().log(e.getMessage());
         }
 
         onFinish.run();

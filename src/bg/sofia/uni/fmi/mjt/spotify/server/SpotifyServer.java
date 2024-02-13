@@ -4,6 +4,7 @@ import bg.sofia.uni.fmi.mjt.spotify.common.CommandParserService;
 import bg.sofia.uni.fmi.mjt.spotify.common.models.CommandResponse;
 import bg.sofia.uni.fmi.mjt.spotify.common.SpotifyCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.exceptions.PersistenceServiceException;
+import bg.sofia.uni.fmi.mjt.spotify.server.logger.SpotifyLogger;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Playlist;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.Song;
 import bg.sofia.uni.fmi.mjt.spotify.server.models.User;
@@ -35,7 +36,7 @@ public class SpotifyServer implements SpotifyServerInterface {
         try {
             PersistenceService.loadApplicationState(this);
         } catch (PersistenceServiceException e) {
-            throw new RuntimeException("An error occurred while loading the data.", e);
+            SpotifyLogger.getInstance().log(e.getMessage());
         }
     }
 
@@ -76,6 +77,7 @@ public class SpotifyServer implements SpotifyServerInterface {
 
         } catch (IOException e) {
             System.out.println("There is a problem with the server socket");
+            SpotifyLogger.getInstance().log(e.getMessage());
         }
     }
 
@@ -114,6 +116,7 @@ public class SpotifyServer implements SpotifyServerInterface {
         int r = sc.read(buffer);
         if (r < 0) {
             System.out.println("Client has closed the connection");
+
             sc.close();
             return true;
         }
@@ -124,6 +127,7 @@ public class SpotifyServer implements SpotifyServerInterface {
 
         String cmd = new String(bytes, StandardCharsets.UTF_8).trim();
         CommandResponse cmdResponse = handleClientInput(cmd, key);
+        SpotifyLogger.getInstance().log(cmdResponse.message());
 
         buffer.clear();
         buffer.put(cmdResponse.message().getBytes());
