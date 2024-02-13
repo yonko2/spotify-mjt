@@ -3,7 +3,6 @@ package bg.sofia.uni.fmi.mjt.spotify.server.commands;
 import bg.sofia.uni.fmi.mjt.spotify.common.models.CommandResponse;
 import bg.sofia.uni.fmi.mjt.spotify.common.SpotifyCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.SpotifyServerInterface;
-import bg.sofia.uni.fmi.mjt.spotify.server.models.Playlist;
 import bg.sofia.uni.fmi.mjt.spotify.server.services.PlaylistService;
 
 import java.nio.channels.SelectionKey;
