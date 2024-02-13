@@ -7,6 +7,7 @@ import bg.sofia.uni.fmi.mjt.spotify.server.models.Playlist;
 import bg.sofia.uni.fmi.mjt.spotify.server.services.PlaylistService;
 
 import java.nio.channels.SelectionKey;
+import java.util.ArrayList;
 
 public class CreatePlaylistCommand implements SpotifyCommand {
     public static final String COMMAND_STRING = "create-playlist";
@@ -22,6 +23,7 @@ public class CreatePlaylistCommand implements SpotifyCommand {
 
     @Override
     public CommandResponse execute() {
+        server.getPlaylists().putIfAbsent(server.getSelectionKeyToUser().get(selectionKey), new ArrayList<>());
         server.getPlaylists().get(server.getSelectionKeyToUser().get(selectionKey))
             .add(PlaylistService.createPlaylist(name));
 

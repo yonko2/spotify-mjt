@@ -22,8 +22,9 @@ public class SearchCommand implements SpotifyCommand {
     public CommandResponse execute() {
         Predicate<Song> songFilter = song -> {
             for (String keyword : keywords) {
-                if (song.getTitle().contains(keyword) || song.getAlbum().contains(keyword) ||
-                    song.getArtist().contains(keyword)) {
+                if (song.getTitle().toLowerCase().contains(keyword) ||
+                    song.getAlbum().toLowerCase().contains(keyword) ||
+                    song.getArtist().toLowerCase().contains(keyword)) {
                     return true;
                 }
             }

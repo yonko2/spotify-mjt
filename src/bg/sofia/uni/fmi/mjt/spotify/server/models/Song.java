@@ -68,9 +68,8 @@ public class Song {
             .append(timeSeconds / SECONDS_IN_MINUTE)
             .append(":")
             .append(timeSeconds % SECONDS_IN_MINUTE)
-            .append(" ")
+            .append(" - ")
             .append(album).append(" - ")
-            .append(streams).append(" times played ")
             .append("Streams: ")
             .append(streams);
         return sb.toString();

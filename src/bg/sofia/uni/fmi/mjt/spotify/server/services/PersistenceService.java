@@ -123,8 +123,8 @@ public class PersistenceService {
         playlists.forEach(playlist -> playlistIDMap.put(playlist.uuid(), playlist));
 
         return userSerializableList.stream().map(userSerializable -> {
-            List<Playlist> userPlaylists = userSerializable.playlistIDs().stream()
-                .map(playlistIDMap::get).toList();
+            List<Playlist> userPlaylists = new ArrayList<>(userSerializable.playlistIDs().stream()
+                .map(playlistIDMap::get).toList());
 
             return new User(userSerializable.uuid(), userSerializable.email(), userSerializable.hashPass(),
                 userPlaylists);
@@ -136,12 +136,16 @@ public class PersistenceService {
         Map<UUID, Song> songIDMap = new HashMap<>();
         songList.forEach(song -> songIDMap.put(song.getUuid(), song));
 
+        if (playlistSerializableList.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         return playlistSerializableList.stream().map(playlistSerializable -> {
-            List<PlaylistSong> playlistSongs = playlistSerializable.songList().stream()
+            List<PlaylistSong> playlistSongs = new ArrayList<>(playlistSerializable.songList().stream()
                 .map(playlistSongSerializable -> new PlaylistSong(
                     songIDMap.get(playlistSongSerializable.songID()),
                     LocalDateTime.parse(playlistSongSerializable.timeAddedISOString())
-                )).toList();
+                )).toList());
 
             return new Playlist(playlistSerializable.uuid(), playlistSerializable.name(), playlistSongs,
                 LocalDateTime.parse(playlistSerializable.timeCreatedISOString()));

@@ -10,7 +10,7 @@ import bg.sofia.uni.fmi.mjt.spotify.server.services.PlaylistService;
 import java.util.Collection;
 
 public class AddSongToPlaylistCommand implements SpotifyCommand {
-    public static final String COMMAND_STRING = "add-song-to-playlist";
+    public static final String COMMAND_STRING = "add-song-to";
     private final String name;
     private final String song;
     private final SpotifyServerInterface server;
