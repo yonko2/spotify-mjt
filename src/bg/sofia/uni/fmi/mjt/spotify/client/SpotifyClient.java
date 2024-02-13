@@ -45,7 +45,7 @@ public class SpotifyClient implements SpotifyClientInterface {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("The connection to the server was lost.");
         }
     }
 

@@ -75,7 +75,7 @@ public class SpotifyServer implements SpotifyServerInterface {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("There is a problem with the server socket", e);
+            System.out.println("There is a problem with the server socket");
         }
     }
 
