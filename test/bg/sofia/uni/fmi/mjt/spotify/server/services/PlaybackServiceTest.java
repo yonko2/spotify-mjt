@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 class PlaybackServiceTest {
     @Test
     void testGetAudioFormatSerializable() {
-        Song song = new Song(UUID.randomUUID(), "artist", "album", "artist", 2, 3, "time.wav");
+        Song song = new Song(UUID.randomUUID(), "artist", "album", "artist", 2, 3, "samsung.wav");
 
         assertDoesNotThrow(() -> PlaybackService.getAudioFormatSerializable(song, 8080));
     }

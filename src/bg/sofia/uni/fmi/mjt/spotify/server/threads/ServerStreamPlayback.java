@@ -11,10 +11,12 @@ public class ServerStreamPlayback extends Thread {
     public static final int BUFFER_SIZE = 2048;
     private final Path path;
     private final int port;
+    private final Runnable onFinish;
 
-    public ServerStreamPlayback(Path path, int port) {
+    public ServerStreamPlayback(Path path, int port, Runnable onFinish) {
         this.path = path;
         this.port = port;
+        this.onFinish = onFinish;
     }
 
     @Override
@@ -29,9 +31,12 @@ public class ServerStreamPlayback extends Thread {
                 int count;
                 while ((count = in.read(buffer)) != -1)
                     out.write(buffer, 0, count);
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        onFinish.run();
     }
 }

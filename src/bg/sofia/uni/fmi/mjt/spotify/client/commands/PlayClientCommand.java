@@ -14,10 +14,12 @@ public class PlayClientCommand implements SpotifyCommand {
     private static final Gson GSON = new Gson();
     private final String audioFormatJson;
     private final SpotifyClientInterface spotifyClient;
+    private final Runnable resetDataLine;
 
-    public PlayClientCommand(String audioFormatJson, SpotifyClientInterface spotifyClient) {
+    public PlayClientCommand(String audioFormatJson, SpotifyClientInterface spotifyClient, Runnable resetDataLine) {
         this.audioFormatJson = audioFormatJson;
         this.spotifyClient = spotifyClient;
+        this.resetDataLine = resetDataLine;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class PlayClientCommand implements SpotifyCommand {
         AudioFormat audioFormat = AudioFormatSerializable.toAudioFormat(audioFormatSerializable);
 
         ClientStreamPlayback clientStreamPlayback =
-            new ClientStreamPlayback(audioFormat, spotifyClient, audioFormatSerializable.port());
+            new ClientStreamPlayback(audioFormat, spotifyClient, audioFormatSerializable.port(), resetDataLine);
         clientStreamPlayback.start();
 
         return new CommandResponse("Playback started on client", true);

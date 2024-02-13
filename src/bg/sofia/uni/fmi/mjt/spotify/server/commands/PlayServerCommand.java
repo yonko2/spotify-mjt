@@ -27,6 +27,12 @@ public class PlayServerCommand implements SpotifyCommand {
         this.selectionKey = selectionKey;
     }
 
+    private void removeKey() {
+        server.getPlaybackThreads().remove(selectionKey);
+    }
+
+    private final Runnable onFinish = this::removeKey;
+
     @Override
     public CommandResponse execute() {
         if (server.getPlaybackThreads().containsKey(selectionKey)) {
@@ -43,7 +49,7 @@ public class PlayServerCommand implements SpotifyCommand {
         Song song = server.getSongs().get(name).getFirst();
         Path path = Paths.get(PersistenceService.DATA_DIRECTORY + "/songs/" + song.getSourceFilepath());
 
-        ServerStreamPlayback serverStreamPlayback = new ServerStreamPlayback(path, port);
+        ServerStreamPlayback serverStreamPlayback = new ServerStreamPlayback(path, port, onFinish);
         server.getPlaybackThreads().put(selectionKey, serverStreamPlayback);
         serverStreamPlayback.start();
 

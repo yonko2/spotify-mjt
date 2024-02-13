@@ -21,6 +21,12 @@ public class SpotifyClient implements SpotifyClientInterface {
     private static final int BUFFER_SIZE = 512;
     private static ByteBuffer buffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
     private boolean logged = false;
+    private final Runnable resetDataLine = () -> {
+        if (dataLine != null) {
+            dataLine.close();
+            dataLine = null;
+        }
+    };
 
     public static void main(String[] args) {
         SpotifyClientInterface client = new SpotifyClient();
@@ -63,16 +69,18 @@ public class SpotifyClient implements SpotifyClientInterface {
     }
 
     private void sendCommandToServer(String userInput, SocketChannel socketChannel) throws IOException {
+        if (!handleCommandGuard(userInput)) {
+            return;
+        }
+
         buffer.clear();
         buffer.put(userInput.getBytes());
         buffer.flip();
         socketChannel.write(buffer);
 
-        handleClientStopPlayback(userInput);
-
         String serverResponse = readServerResponse(socketChannel);
         if (serverResponse.contains("encoding")) {
-            serverResponse = new PlayClientCommand(serverResponse, this).execute().message();
+            serverResponse = new PlayClientCommand(serverResponse, this, resetDataLine).execute().message();
         }
 
         System.out.println(serverResponse);
@@ -83,13 +91,15 @@ public class SpotifyClient implements SpotifyClientInterface {
         }
     }
 
-    private void handleClientStopPlayback(String userInput) {
-        if (logged && userInput.equalsIgnoreCase(StopPlaybackCommand.COMMAND_STRING)) {
-            if (dataLine != null) {
-                dataLine.close();
-                dataLine = null;
+    private boolean handleCommandGuard(String userInput) {
+        if (logged) {
+            if (userInput.equalsIgnoreCase(StopPlaybackCommand.COMMAND_STRING)) {
+                resetDataLine.run();
+            } else {
+                return !userInput.startsWith(PlayClientCommand.COMMAND_STRING) || dataLine == null;
             }
         }
+        return true;
     }
 
     private String readServerResponse(SocketChannel socketChannel) throws IOException {
@@ -109,7 +119,7 @@ public class SpotifyClient implements SpotifyClientInterface {
 
     @Override
     public void disconnect() throws IOException {
-        handleClientStopPlayback(StopPlaybackCommand.COMMAND_STRING);
+        resetDataLine.run();
         this.mainSocketChannel.close();
     }
 

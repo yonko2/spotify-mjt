@@ -16,11 +16,14 @@ public class ClientStreamPlayback extends Thread {
     private final AudioFormat audioFormat;
     private final SpotifyClientInterface spotifyClient;
     private final int port;
+    private final Runnable resetDataLine;
 
-    public ClientStreamPlayback(AudioFormat audioFormat, SpotifyClientInterface spotifyClient, int port) {
+    public ClientStreamPlayback(AudioFormat audioFormat, SpotifyClientInterface spotifyClient, int port,
+                                Runnable resetDataLine) {
         this.audioFormat = audioFormat;
         this.spotifyClient = spotifyClient;
         this.port = port;
+        this.resetDataLine = resetDataLine;
     }
 
     @Override
@@ -49,5 +52,7 @@ public class ClientStreamPlayback extends Thread {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        resetDataLine.run();
     }
 }
