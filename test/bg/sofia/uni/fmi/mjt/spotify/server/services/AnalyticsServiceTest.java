@@ -13,11 +13,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AnalyticsServiceTest {
+class AnalyticsServiceTest {
     private static final SpotifyServerInterface serverMock = mock(SpotifyServerInterface.class);
 
     private static final List<Song> songsList = List.of(
@@ -31,17 +32,33 @@ public class AnalyticsServiceTest {
 
     @BeforeAll
     static void setUp() {
+        when(serverMock.getSongs()).thenReturn(songs);
+
         songsList.forEach(song -> songs.put(song.getTitle(), List.of(song)));
     }
 
     @Test
     void testGetMostListenedSongsSuccess() {
-        when(serverMock.getSongs()).thenReturn(songs);
-
         List<Song> mostListenedSongs = AnalyticsService.getMostListenedSongs(serverMock, 3);
         Assertions.assertEquals(3, mostListenedSongs.size());
         Assertions.assertEquals("song3", mostListenedSongs.get(0).getTitle());
         Assertions.assertEquals("song2", mostListenedSongs.get(1).getTitle());
         Assertions.assertEquals("song4", mostListenedSongs.get(2).getTitle());
+    }
+
+    @Test
+    void testGetMostListenedSongsThrows() {
+        assertThrows(IllegalArgumentException.class, () -> AnalyticsService.getMostListenedSongs(serverMock, 0));
+    }
+
+    @Test
+    void testSearchSongs() {
+        List<String> keywords = List.of("song1", "album2", "artist3");
+
+        String result = AnalyticsService.searchSongs(serverMock, keywords);
+        String expected = songs.get("song1").getFirst().getSongInfo() + System.lineSeparator() +
+            songs.get("song2").getFirst().getSongInfo() + System.lineSeparator() +
+            songs.get("song3").getFirst().getSongInfo() + System.lineSeparator();
+        Assertions.assertEquals(expected, result);
     }
 }

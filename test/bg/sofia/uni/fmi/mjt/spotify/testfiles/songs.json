@@ -25,14 +25,5 @@
     "timeSeconds": 416,
     "streams": 4,
     "sourceFilepath": "time.wav"
-  },
-  {
-    "uuid": "975d3f82-b2be-4070-bb4b-ef5b2d775666",
-    "title": "Time Solo",
-    "album": "The Dark Side Of The Moon",
-    "artist": "Pink Floyd",
-    "timeSeconds": 105,
-    "streams": 0,
-    "sourceFilepath": "time-solo.wav"
   }
 ]

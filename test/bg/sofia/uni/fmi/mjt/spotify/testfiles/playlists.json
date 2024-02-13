@@ -1,0 +1,17 @@
+[
+  {
+    "uuid": "f6c2c813-5197-4529-a2f2-b8d4caf04bbc",
+    "name": "p1",
+    "songList": [
+      {
+        "songID": "975d3f82-b2be-4070-bb4b-ef5b2d775a47",
+        "timeAddedISOString": "2024-02-13T11:16:31.464243600"
+      },
+      {
+        "songID": "975d3f82-b2be-4070-bb4b-ef5b2d775a47",
+        "timeAddedISOString": "2024-02-13T11:24:09.314285900"
+      }
+    ],
+    "timeCreatedISOString": "2024-02-13T11:13:29.317684600"
+  }
+]
