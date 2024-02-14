@@ -46,7 +46,8 @@ class SessionServiceTest {
     private static final ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<User, List<Playlist>> playlists = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<SelectionKey, User> selectionKeyToUser = new ConcurrentHashMap<>();
-    private static final List<SelectionKey> selectionKeyList = List.of(mock(SelectionKey.class), mock(SelectionKey.class));
+    private static final List<SelectionKey> selectionKeyList =
+        List.of(mock(SelectionKey.class), mock(SelectionKey.class));
 
     @BeforeAll
     static void setUp() {
@@ -69,35 +70,40 @@ class SessionServiceTest {
         var usersCopy = new ConcurrentHashMap<>(users);
         when(serverMock.getUsers()).thenReturn(usersCopy);
 
-        assertDoesNotThrow(() -> SessionService.register(usersCopy, "email3", "pass3"));
-        assertEquals(3, usersCopy.size());
+        assertDoesNotThrow(() -> SessionService.register(usersCopy, "email3", "pass3"), "Test register success");
+        assertEquals(3, usersCopy.size(), "Test register success");
     }
 
     @Test
     void testRegisterAlreadyExistsThrows() {
-        assertThrows(IllegalArgumentException.class, () -> SessionService.register(users, "email1", "pass1"));
+        assertThrows(IllegalArgumentException.class, () -> SessionService.register(users, "email1", "pass1"),
+            "Test register already exists throws");
     }
 
     @Test
     void testLoginSuccess() {
-        assertDoesNotThrow(() -> SessionService.login( "email1", "a", serverMock, selectionKeyList.get(0)));
+        assertDoesNotThrow(() -> SessionService.login("email1", "a", serverMock, selectionKeyList.get(0)),
+            "Test login success");
     }
 
     @Test
     void testLoginNoSuchUserThrows() {
         assertThrows(SessionServiceException.class,
-            () -> SessionService.login( "email5", "a", serverMock, selectionKeyList.get(0)));
+            () -> SessionService.login("email5", "a", serverMock, selectionKeyList.get(0)),
+            "Test login no such user throws");
     }
 
     @Test
     void testLoginAlreadyLoggedInThrows() {
         assertThrows(SessionServiceException.class,
-            () -> SessionService.login( "email2", "b", serverMock, selectionKeyList.get(1)));
+            () -> SessionService.login("email2", "b", serverMock, selectionKeyList.get(1)),
+            "Test login already logged in throws");
     }
 
     @Test
     void testLoginInvalidPasswordThrows() {
         assertThrows(SessionServiceException.class,
-            () -> SessionService.login( "email1", "b", serverMock, selectionKeyList.get(0)));
+            () -> SessionService.login("email1", "b", serverMock, selectionKeyList.get(0)),
+            "Test login invalid password throws");
     }
 }

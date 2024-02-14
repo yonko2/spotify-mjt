@@ -42,7 +42,8 @@ class AddSongToPlaylistCommandTest {
     private static final ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<User, List<Playlist>> playlists = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<SelectionKey, User> selectionKeyToUser = new ConcurrentHashMap<>();
-    private static final List<SelectionKey> selectionKeyList = List.of(mock(SelectionKey.class), mock(SelectionKey.class));
+    private static final List<SelectionKey> selectionKeyList =
+        List.of(mock(SelectionKey.class), mock(SelectionKey.class));
 
     @BeforeAll
     static void setUp() {
@@ -64,20 +65,20 @@ class AddSongToPlaylistCommandTest {
     void executeSuccess() {
         var command = new AddSongToPlaylistCommand("playlist1", "song1", serverMock);
         command.execute();
-        assertEquals(playlistsList.get(0).songList().size(), 1);
+        assertEquals(playlistsList.get(0).songList().size(), 1, "Test add song to playlist success");
     }
 
     @Test
     void executeNoPlaylistThrows() {
         var command = new AddSongToPlaylistCommand("playlist3", "song1", serverMock);
         var response = command.execute();
-        assertEquals("Playlist not found", response.message());
+        assertEquals("Playlist not found", response.message(), "Test add song to playlist no playlist throws");
     }
 
     @Test
     void executeNoSongThrows() {
         var command = new AddSongToPlaylistCommand("playlist1", "song5", serverMock);
         var response = command.execute();
-        assertEquals("Song not found", response.message());
+        assertEquals("Song not found", response.message(), "Test add song to playlist no song throws");
     }
 }

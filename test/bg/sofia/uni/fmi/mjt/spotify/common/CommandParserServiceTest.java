@@ -45,35 +45,40 @@ class CommandParserServiceTest {
 
     @Test
     void testParseNoSuchCommand() {
-        assertNull(CommandParserService.parse("NoSuchCommand", server, selectionKeyList.get(1)));
-        assertNull(CommandParserService.parse("NoSuchCommand", server, selectionKeyList.get(0)));
+        assertNull(CommandParserService.parse("NoSuchCommand", server, selectionKeyList.get(1)),
+            "Test no command logged throws.");
+        assertNull(CommandParserService.parse("NoSuchCommand", server, selectionKeyList.get(0)),
+            "Test no command not logged throws.");
     }
 
     @Test
     void testParseNotLoggedCommandsSuccess() {
         assertInstanceOf(LoginCommand.class,
-            CommandParserService.parse("login a a", server, selectionKeyList.get(0)));
+            CommandParserService.parse("login a a", server, selectionKeyList.get(0)), "Test login success.");
         assertInstanceOf(RegisterCommand.class,
-            CommandParserService.parse("register a a", server, selectionKeyList.get(0)));
+            CommandParserService.parse("register a a", server, selectionKeyList.get(0)), "Test register success.");
     }
 
     @Test
     void testParseLoggedCommandsSuccess() {
         assertInstanceOf(DisconnectCommand.class,
-            CommandParserService.parse("disconnect", server, selectionKeyList.get(1)));
+            CommandParserService.parse("disconnect", server, selectionKeyList.get(1)), "Test disconnect success.");
         assertInstanceOf(StopPlaybackCommand.class,
-            CommandParserService.parse("stop", server, selectionKeyList.get(1)));
+            CommandParserService.parse("stop", server, selectionKeyList.get(1)), "Test stop success.");
         assertInstanceOf(SearchCommand.class,
-            CommandParserService.parse("search test", server, selectionKeyList.get(1)));
+            CommandParserService.parse("search test", server, selectionKeyList.get(1)), "Test search success.");
         assertInstanceOf(TopCommand.class,
-            CommandParserService.parse("top 1", server, selectionKeyList.get(1)));
+            CommandParserService.parse("top 1", server, selectionKeyList.get(1)), "Test top success.");
         assertInstanceOf(CreatePlaylistCommand.class,
-            CommandParserService.parse("create-playlist test", server, selectionKeyList.get(1)));
+            CommandParserService.parse("create-playlist test", server, selectionKeyList.get(1)),
+            "Test create-playlist success.");
         assertInstanceOf(AddSongToPlaylistCommand.class,
-            CommandParserService.parse("add-song-to test/test", server, selectionKeyList.get(1)));
+            CommandParserService.parse("add-song-to test/test", server, selectionKeyList.get(1)),
+            "Test add-song-to success.");
         assertInstanceOf(ShowPlaylistCommand.class,
-            CommandParserService.parse("show-playlist test", server, selectionKeyList.get(1)));
+            CommandParserService.parse("show-playlist test", server, selectionKeyList.get(1)),
+            "Test show-playlist success.");
         assertInstanceOf(PlayServerCommand.class,
-            CommandParserService.parse("play test", server, selectionKeyList.get(1)));
+            CommandParserService.parse("play test", server, selectionKeyList.get(1)), "Test play success.");
     }
 }

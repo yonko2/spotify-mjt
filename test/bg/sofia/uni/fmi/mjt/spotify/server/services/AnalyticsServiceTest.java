@@ -40,15 +40,16 @@ class AnalyticsServiceTest {
     @Test
     void testGetMostListenedSongsSuccess() {
         List<Song> mostListenedSongs = AnalyticsService.getMostListenedSongs(serverMock, 3);
-        Assertions.assertEquals(3, mostListenedSongs.size());
-        Assertions.assertEquals("song3", mostListenedSongs.get(0).getTitle());
-        Assertions.assertEquals("song2", mostListenedSongs.get(1).getTitle());
-        Assertions.assertEquals("song4", mostListenedSongs.get(2).getTitle());
+        Assertions.assertEquals(3, mostListenedSongs.size(), "Test get most listened songs success");
+        Assertions.assertEquals("song3", mostListenedSongs.get(0).getTitle(), "Test get most listened songs success");
+        Assertions.assertEquals("song2", mostListenedSongs.get(1).getTitle(), "Test get most listened songs success");
+        Assertions.assertEquals("song4", mostListenedSongs.get(2).getTitle(), "Test get most listened songs success");
     }
 
     @Test
     void testGetMostListenedSongsThrows() {
-        assertThrows(IllegalArgumentException.class, () -> AnalyticsService.getMostListenedSongs(serverMock, 0));
+        assertThrows(IllegalArgumentException.class, () -> AnalyticsService.getMostListenedSongs(serverMock, 0),
+            "Test get most listened songs throws");
     }
 
     @Test
@@ -59,6 +60,6 @@ class AnalyticsServiceTest {
         String expected = songs.get("song1").getFirst().getSongInfo() + System.lineSeparator() +
             songs.get("song2").getFirst().getSongInfo() + System.lineSeparator() +
             songs.get("song3").getFirst().getSongInfo() + System.lineSeparator();
-        Assertions.assertEquals(expected, result);
+        Assertions.assertEquals(expected, result, "Test search songs");
     }
 }

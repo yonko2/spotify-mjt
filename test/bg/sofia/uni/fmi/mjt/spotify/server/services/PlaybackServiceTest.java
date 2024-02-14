@@ -8,6 +8,6 @@ class PlaybackServiceTest {
     @Test
     void testFindFreePortSuccess() {
         var port = PlaybackService.findFreePort();
-        assertTrue(port > 0);
+        assertTrue(port > 0, "Test find free port success");
     }
 }

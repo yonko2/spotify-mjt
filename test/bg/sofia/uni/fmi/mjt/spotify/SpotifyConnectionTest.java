@@ -4,6 +4,8 @@ import bg.sofia.uni.fmi.mjt.spotify.client.SpotifyClient;
 import bg.sofia.uni.fmi.mjt.spotify.server.SpotifyServer;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 class SpotifyConnectionTest {
     static class ConnectionRunnable implements Runnable {
         @Override
@@ -32,16 +34,16 @@ class SpotifyConnectionTest {
     }
 
     @Test
-    void testStartClientServer() {
+    void testStartClient() {
         Thread thread = new Thread(new ConnectionRunnable());
         thread.setDaemon(true);
-        thread.start();
+        assertDoesNotThrow(thread::start, "Test start client");
     }
 
     @Test
     void testStartServer() {
         Thread thread = new Thread(new ServerRunnable());
         thread.setDaemon(true);
-        thread.start();
+        assertDoesNotThrow(thread::start, "Test start server");
     }
 }

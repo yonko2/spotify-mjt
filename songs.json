@@ -5,7 +5,7 @@
     "album": "nokia",
     "artist": "nokia",
     "timeSeconds": 5,
-    "streams": 10,
+    "streams": 12,
     "sourceFilepath": "nokia.wav"
   },
   {
@@ -23,7 +23,7 @@
     "album": "Animals",
     "artist": "Pink Floyd",
     "timeSeconds": 1025,
-    "streams": 10,
+    "streams": 11,
     "sourceFilepath": "dogs.wav"
   },
   {
@@ -36,21 +36,21 @@
     "sourceFilepath": "under-the-bridge.wav"
   },
   {
-    "uuid": "975d3f82-b2be-4070-bb4b-ef5b2d775a47",
-    "title": "Time",
-    "album": "The Dark Side Of The Moon",
-    "artist": "Pink Floyd",
-    "timeSeconds": 416,
-    "streams": 4,
-    "sourceFilepath": "time.wav"
-  },
-  {
     "uuid": "975d3f82-b2be-4070-bb4b-ef5b2a675a47",
     "title": "Time Solo",
     "album": "The Dark Side Of The Moon",
     "artist": "Pink Floyd",
     "timeSeconds": 105,
-    "streams": 2,
+    "streams": 3,
     "sourceFilepath": "time-solo.wav"
+  },
+  {
+    "uuid": "975d3f82-b2be-4070-bb4b-ef5b2d775a47",
+    "title": "Time",
+    "album": "The Dark Side Of The Moon",
+    "artist": "Pink Floyd",
+    "timeSeconds": 416,
+    "streams": 5,
+    "sourceFilepath": "time.wav"
   }
 ]

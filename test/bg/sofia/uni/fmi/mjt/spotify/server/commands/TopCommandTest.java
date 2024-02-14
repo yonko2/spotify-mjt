@@ -36,6 +36,7 @@ class TopCommandTest {
 
         songsList.forEach(song -> songs.put(song.getTitle(), List.of(song)));
     }
+
     @Test
     void testExecuteSuccess() {
         TopCommand topCommand = new TopCommand(3, serverMock);
@@ -44,12 +45,12 @@ class TopCommandTest {
         var expected = "1. artist3 - song3 - 0:1 - album3 - Streams: 8" + System.lineSeparator() +
             "2. artist2 - song2 - 0:1 - album2 - Streams: 5" + System.lineSeparator() +
             "3. artist4 - song4 - 0:1 - album4 - Streams: 4" + System.lineSeparator();
-        assertEquals(expected, result.message());
+        assertEquals(expected, result.message(), "Test top command success");
     }
 
     @Test
     void testExecuteThrows() {
         TopCommand topCommand = new TopCommand(-1, serverMock);
-        assertFalse(topCommand.execute().isSuccessful());
+        assertFalse(topCommand.execute().isSuccessful(), "Test top command throws exception");
     }
 }

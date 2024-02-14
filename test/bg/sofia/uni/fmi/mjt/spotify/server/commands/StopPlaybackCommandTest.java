@@ -19,7 +19,8 @@ import static org.mockito.Mockito.when;
 class StopPlaybackCommandTest {
     private static final SpotifyServerInterface server = mock(SpotifyServerInterface.class);
     private static final SelectionKey key = mock(SelectionKey.class);
-    private static final ConcurrentHashMap<SelectionKey, ServerStreamPlayback> playbackThreads = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<SelectionKey, ServerStreamPlayback> playbackThreads =
+        new ConcurrentHashMap<>();
     private static final ServerStreamPlayback thread = mock(ServerStreamPlayback.class);
 
     @BeforeAll
@@ -36,8 +37,8 @@ class StopPlaybackCommandTest {
         StopPlaybackCommand stopPlaybackCommand = new StopPlaybackCommand(server, key);
         var res = stopPlaybackCommand.execute();
 
-        assertTrue(res.isSuccessful());
-        assertTrue(playbackThreadsCopy.isEmpty());
+        assertTrue(res.isSuccessful(), "Test stop playback success");
+        assertTrue(playbackThreadsCopy.isEmpty(), "Test stop playback success");
     }
 
     @Test
@@ -47,6 +48,6 @@ class StopPlaybackCommandTest {
         StopPlaybackCommand stopPlaybackCommand = new StopPlaybackCommand(server, keyCopy);
         var res = stopPlaybackCommand.execute();
 
-        assertFalse(res.isSuccessful());
+        assertFalse(res.isSuccessful(), "Test stop playback throws");
     }
 }

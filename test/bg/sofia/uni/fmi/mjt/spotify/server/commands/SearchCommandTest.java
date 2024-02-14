@@ -36,12 +36,13 @@ class SearchCommandTest {
 
     @Test
     void testExecuteSuccess() {
-        assertTrue(new SearchCommand("song1", serverMock).execute().message().contains("song1"));
+        assertTrue(new SearchCommand("song1", serverMock).execute().message().contains("song1"), "Test search success");
     }
 
     @Test
     void testExecuteFails() {
-        assertFalse(new SearchCommand("song5", serverMock).execute().message().contains("song5"));
+        assertFalse(new SearchCommand("song5", serverMock).execute().message().contains("song5"),
+            "Test search not found fails");
     }
 
 }

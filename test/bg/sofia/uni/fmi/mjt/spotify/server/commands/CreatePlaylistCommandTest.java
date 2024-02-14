@@ -70,6 +70,7 @@ class CreatePlaylistCommandTest {
         var res = createPlaylistCommand.execute();
 
         assertTrue(res.isSuccessful());
-        assertEquals(2, playlists.get(selectionKeyToUser.get(selectionKeyList.get(1))).size());
+        assertEquals(2, playlists.get(selectionKeyToUser.get(selectionKeyList.get(1))).size(),
+            "Test create playlist success");
     }
 }

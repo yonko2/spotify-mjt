@@ -68,13 +68,14 @@ class ShowPlaylistCommandTest {
         showPlaylistCommand.execute();
 
         assertEquals(PlaylistService.getPlaylistInfo(playlistsList.get(0), usersList.get(0)),
-            showPlaylistCommand.execute().message());
+            showPlaylistCommand.execute().message(), "Test show playlist success");
     }
 
     @Test
     void testShowPlaylistNoPlaylistThrows() {
         ShowPlaylistCommand showPlaylistCommand = new ShowPlaylistCommand("playlist3", serverMock);
-        assertEquals("Playlist not found", showPlaylistCommand.execute().message());
+        assertEquals("Playlist not found", showPlaylistCommand.execute().message(),
+            "Test show playlist no playlist throws");
     }
 
 }

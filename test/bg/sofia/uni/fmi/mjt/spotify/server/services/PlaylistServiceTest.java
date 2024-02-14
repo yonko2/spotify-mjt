@@ -28,10 +28,10 @@ class PlaylistServiceTest {
         PlaylistSong playlistSong = new PlaylistSong(song, time);
 
         Playlist playlist = new Playlist(UUID.randomUUID(), "playlist1", List.of(PlaylistSong.of(song)),
-           playlistSong.timeAdded());
+            playlistSong.timeAdded());
 
         User user = new User(UUID.randomUUID(), "email1", "pass1", List.of(playlist));
 
-        assertDoesNotThrow(() -> PlaylistService.getPlaylistInfo(playlist, user));
+        assertDoesNotThrow(() -> PlaylistService.getPlaylistInfo(playlist, user), "Test get playlist info");
     }
 }

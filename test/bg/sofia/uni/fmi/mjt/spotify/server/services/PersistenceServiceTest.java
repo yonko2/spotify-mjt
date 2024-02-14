@@ -26,10 +26,10 @@ class PersistenceServiceTest {
         Gson gson = new Gson();
         try (FileReader reader = new FileReader(SONGS_PATH)) {
             var songs = gson.fromJson(reader, Song[].class);
-            if(songs == null) {
+            if (songs == null) {
                 songs = new Song[0];
             }
-            assertEquals(songs.length, server.getSongs().size());
+            assertEquals(songs.length, server.getSongs().size(), "Test load application state");
         } catch (IOException e) {
             Assertions.fail("Needed files not found (songs.json)");
         }
