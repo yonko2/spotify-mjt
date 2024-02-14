@@ -4,6 +4,7 @@ import bg.sofia.uni.fmi.mjt.spotify.server.commands.DisconnectCommand;
 import bg.sofia.uni.fmi.mjt.spotify.client.commands.PlayClientCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.LoginCommand;
 import bg.sofia.uni.fmi.mjt.spotify.server.commands.StopPlaybackCommand;
+import bg.sofia.uni.fmi.mjt.spotify.server.logger.SpotifyLogger;
 
 import javax.sound.sampled.SourceDataLine;
 import java.io.IOException;
@@ -70,6 +71,8 @@ public class SpotifyClient implements SpotifyClientInterface {
 
     private void sendCommandToServer(String userInput, SocketChannel socketChannel) throws IOException {
         if (!handleCommandGuard(userInput)) {
+            System.out.println("Playback already running.");
+            SpotifyLogger.getInstance().log("Playback already running.");
             return;
         }
 
